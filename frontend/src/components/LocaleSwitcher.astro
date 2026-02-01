@@ -126,8 +126,10 @@ const currentLocale = localizations?.find((l) => l.current);
   }
 
   // Handle edit mode transitions
-  if (window.apos) {
-    window.apos.bus.on('context-editing', initLocales);
-    window.apos.bus.on('context-previewing', initLocales);
-  }
+    setTimeout(() => {
+    if (window.apos) {
+      window.apos.bus.$on('refreshed', initLocales);
+      window.apos.bus.$on('modal-resolved', initLocales);
+    }
+  }, 300);
 </script>
