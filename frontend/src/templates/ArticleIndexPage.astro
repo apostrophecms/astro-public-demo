@@ -14,14 +14,12 @@ const {
   url: pageUrl
 } = Astro.props.aposData;
 
-// Build pagination
 const pagerOptions = {
   page: currentPage,
   total: totalPages,
   shown: 5
 };
 
-// Generate page range (mimics apos.pager.pageRange)
 function getPageRange(options) {
   const pages = [];
   const shown = options.shown || 5;
@@ -29,7 +27,6 @@ function getPageRange(options) {
   let start = Math.max(2, options.page - half);
   let end = Math.min(options.total - 1, options.page + half);
 
-  // Adjust if we're near the start or end
   if (options.page <= half + 1) {
     end = Math.min(options.total - 1, shown);
   }

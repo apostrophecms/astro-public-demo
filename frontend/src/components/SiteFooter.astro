@@ -1,7 +1,3 @@
----
-// Footer component - static content matching backend layout
----
-
 <footer class='footer'>
   <div class='footer__section footer__top'>
     <div class='footer__column footer__column--logo'>
@@ -255,12 +251,10 @@
     const toggle = document.querySelector('[data-mode-switch] input');
     if (!toggle) return;
 
-    // Clean up previous listener if exists
     if (toggle._themeCleanup) {
       toggle._themeCleanup();
     }
 
-    // Apply current preference
     applyPref(getPref());
 
     function handleChange() {
@@ -276,18 +270,16 @@
     };
   }
 
-  // Initial load
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', initThemeToggle);
   } else {
     initThemeToggle();
   }
 
-  // Handle edit mode transitions
   setTimeout(() => {
     if (window.apos) {
-      window.apos.bus.$on('refreshed', initThemeToggle);
-      window.apos.bus.$on('modal-resolved', initThemeToggle);
+      window.apos.bus.on('refreshed', initThemeToggle);
+      window.apos.bus.on('modal-resolved', initThemeToggle);
     }
   }, 300);
 </script>
