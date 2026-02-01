@@ -1,0 +1,36 @@
+---
+import { getImageSrcset, getImageSizes } from '@apostrophecms/apostrophe-astro/lib/util';
+const { widget, options = {} } = Astro.props;
+
+const className = options.className || widget.className || 'image-widget';
+const size = options.size || widget.size || 'full';
+const loadingType = options.loadingType || widget.loadingType || 'lazy';
+const dimensionAttrs = options.dimensionAttrs ?? widget.dimensionAttrs ?? true;
+
+const attachment = widget.image?.attachment;
+if (!attachment) {
+  return;
+}
+
+const srcset = getImageSrcset(attachment._urls);
+const sizes = getImageSizes(widget.image._crop);
+const alt = widget.altText || attachment.alt || attachment.title || '';
+
+// Build dimension attributes if enabled
+const dimensions = dimensionAttrs ? {
+  width: attachment.width,
+  height: attachment.height
+} : {};
+---
+
+<div class={`${className}__wrapper`}>
+  <img 
+    class={className}
+    src={attachment._urls[size]}
+    srcset={srcset}
+    sizes={sizes}
+    alt={alt}
+    loading={loadingType}
+    {...dimensions}
+  />
+</div>

@@ -1,0 +1,107 @@
+@use 'sass:math';
+
+// SASS variables (must be defined before imports that use them)
+$outerWidth: 1100px;
+$spacer: 50px;
+$brand-red: #ea433a;
+$brand-mustard: #cc9300;
+$brand-purple: #b327bf;
+$brand-blue: #66f;
+$brand-seafoam: #00bf9a;
+$link-color: rgb(101, 22, 221);
+
+// CSS custom properties
+@import '_variables';
+
+// Base styles
+@import '_global';
+@import '_type';
+@import '_widget';
+@import '_misc';
+
+// Layout
+@import '_nav';
+@import '_header';
+@import '_footer';
+@import '_subnav';
+
+// Components
+@import '_article';
+@import '_pager';
+@import '_rich-text';
+@import '_cta';
+@import '_columns';
+@import '_container';
+@import '_button';
+@import '_locales';
+
+// Widgets
+@import '_hero';
+@import '_card';
+@import '_price-card';
+@import '_media';
+@import '_image-widget';
+@import '_pr-widget';
+
+body {
+  margin: 0;
+  padding-bottom: 90px;
+}
+
+.home {
+  font-family: var(--default-font);
+  display: flex;
+  width: 100%;
+  max-width: 100%;
+  margin: 0 auto;
+}
+
+.home-title {
+  font-family: var(--heading-font);
+  margin: 20px 0 10px;
+  font-weight: 400;
+  line-height: 1.1;
+  letter-spacing: -3px;
+}
+
+.home .content {
+  font-family: var(--default-font);
+  flex-grow: 1;
+  margin-left: 30px;
+
+  @media (max-width: 680px) {
+    max-width: 100%;
+    margin-left: 0;
+  }
+
+  @container (max-width: 680px) {
+    max-width: 100%;
+    margin-left: 0;
+  }
+}
+
+.home-cta {
+  margin: 10px 0 50px;
+  .cta-links-widget {
+    margin-top: 20px;
+  }
+}
+
+.purple {
+  color: #6617dc;
+}
+
+.tip {
+  font-family: 'Caveat', cursive;
+  color: #6617dc;
+}
+
+h1, h2, h3, h4 {
+  @media (max-width: 680px) {
+    text-align: center;
+  }
+
+  @container (max-width: 680px) {
+    text-align: center;
+  }
+}
