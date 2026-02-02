@@ -47,7 +47,7 @@ if (article?.blurb && !article.blurb.options) {
     {article._categories?.length > 0 && (
       <div class="article-topics">
         {article._categories.map((category) => (
-          <a href={`${article._parentSlug}?categories=${category.slug}`} class="chip">{category.title}</a>
+          <a href={`${article._parentUrl}?categories=${category.slug}`} class="chip">{category.title}</a>
         ))}
       </div>
     )}

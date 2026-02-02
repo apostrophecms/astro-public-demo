@@ -16,7 +16,6 @@ export default {
       blurb: 1,
       publishedDate: 1,
       _url: 1,
-      _parentSlug: 1,
       _image: 1,
       _categories: 1,
       _author: 1,
