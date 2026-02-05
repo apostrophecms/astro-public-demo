@@ -108,7 +108,6 @@ const currentLocale = localizations?.find((l) => l.current);
     toggler.addEventListener('click', toggleLocales);
     window.addEventListener('click', clickOutside);
 
-    // Return cleanup function
     const cleanup = () => {
       toggler.removeEventListener('click', toggleLocales);
       window.removeEventListener('click', clickOutside);
@@ -118,16 +117,16 @@ const currentLocale = localizations?.find((l) => l.current);
     return cleanup;
   }
 
-  // Wait for DOM
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', initLocales);
   } else {
     initLocales();
   }
 
-  // Handle edit mode transitions
-  if (window.apos) {
-    window.apos.bus.on('context-editing', initLocales);
-    window.apos.bus.on('context-previewing', initLocales);
-  }
+    setTimeout(() => {
+    if (window.apos) {
+      window.apos.bus.on('refreshed', initLocales);
+      window.apos.bus.on('modal-resolved', initLocales);
+    }
+  }, 300);
 </script>

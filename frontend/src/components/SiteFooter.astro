@@ -1,7 +1,3 @@
----
-// Footer component - static content matching backend layout
----
-
 <footer class='footer'>
   <div class='footer__section footer__top'>
     <div class='footer__column footer__column--logo'>
@@ -80,27 +76,32 @@
       <ul>
         <li>
           <a href='http://apostrophecms.com/?utm_source=demo' target='_blank'
-            >ApostropheCMS.com</a>
+            >ApostropheCMS.com</a
+          >
         </li>
         <li>
           <a
             href='https://docs.apostrophecms.org/?utm_source=demo'
-            target='_blank'>ApostropheCMS Docs</a>
+            target='_blank'>ApostropheCMS Docs</a
+          >
         </li>
         <li>
           <a
             href='https://docs.apostrophecms.org/guide/development-setup.html?utm_source=demo'
-            target='_blank'>Getting Started</a>
+            target='_blank'>Getting Started</a
+          >
         </li>
         <li>
           <a
             href='https://apostrophecms.com/assembly?utm_source=demo'
-            target='_blank'>ApostropheCMS Multisite</a>
+            target='_blank'>ApostropheCMS Multisite</a
+          >
         </li>
         <li>
           <a
             href='https://meetings.hubspot.com/tom-boutell/demo-meeting?utm_source=demo'
-            target='_blank'>Book a Call</a>
+            target='_blank'>Book a Call</a
+          >
         </li>
       </ul>
     </div>
@@ -110,27 +111,32 @@
         <li>
           <a
             href='https://apostrophecms.com/extensions?license=pro&utm_source=demo'
-            target='_blank'>Pro Feature</a>
+            target='_blank'>Pro Feature</a
+          >
         </li>
         <li>
           <a
             href='https://apostrophecms.com/hosting?utm_source=demo'
-            target='_blank'>Hosting</a>
+            target='_blank'>Hosting</a
+          >
         </li>
         <li>
           <a
             href='https://apostrophecms.com/blog?category=product-updates&utm_source=demo'
-            target='_blank'>Changelog</a>
+            target='_blank'>Changelog</a
+          >
         </li>
         <li>
           <a
             href='https://apostrophecms.com/accessibility?utm_source=demo'
-            target='_blank'>Accessibility</a>
+            target='_blank'>Accessibility</a
+          >
         </li>
         <li>
           <a
             href='https://apostrophecms.com/security?utm_source=demo'
-            target='_blank'>Security</a>
+            target='_blank'>Security</a
+          >
         </li>
       </ul>
     </div>
@@ -139,23 +145,27 @@
       <ul>
         <li>
           <a href='https://bsky.app/profile/apostrophecms.com' target='_blank'
-            >Bluesky</a>
+            >Bluesky</a
+          >
         </li>
         <li>
           <a href='https://x.com/apostrophecms' target='_blank'>X / Twitter</a>
         </li>
         <li>
           <a href='https://discord.com/invite/HwntQpADJr' target='_blank'
-            >Join the Discord</a>
+            >Join the Discord</a
+          >
         </li>
         <li>
           <a href='https://youtube.com/c/apostrophecms' target='_blank'
-            >YouTube</a>
+            >YouTube</a
+          >
         </li>
         <li>
           <a
             href='https://www.linkedin.com/company/apostrophecms/'
-            target='_blank'>LinkedIn</a>
+            target='_blank'>LinkedIn</a
+          >
         </li>
       </ul>
     </div>
@@ -237,15 +247,14 @@
   }
 
   function initThemeToggle() {
+    console.log('initialized');
     const toggle = document.querySelector('[data-mode-switch] input');
     if (!toggle) return;
 
-    // Clean up previous listener if exists
     if (toggle._themeCleanup) {
       toggle._themeCleanup();
     }
 
-    // Apply current preference
     applyPref(getPref());
 
     function handleChange() {
@@ -261,16 +270,16 @@
     };
   }
 
-  // Initial load
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', initThemeToggle);
   } else {
     initThemeToggle();
   }
 
-  // Handle edit mode transitions
-  if (window.apos) {
-    window.apos.bus.on('context-editing', initThemeToggle);
-    window.apos.bus.on('context-previewing', initThemeToggle);
-  }
+  setTimeout(() => {
+    if (window.apos) {
+      window.apos.bus.on('refreshed', initThemeToggle);
+      window.apos.bus.on('modal-resolved', initThemeToggle);
+    }
+  }, 300);
 </script>

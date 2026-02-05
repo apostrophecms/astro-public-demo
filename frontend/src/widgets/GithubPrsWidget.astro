@@ -3,11 +3,9 @@ import dayjs from 'dayjs';
 
 const { widget } = Astro.props;
 
-// Capitalize first letter helper
 const capitalize = (str) => str ? str.charAt(0).toUpperCase() + str.slice(1) : '';
 
 // Fetch PRs directly from GitHub API
-// The backend component "github-prs-widget:prs" is not executed when rendering via Astro
 const repo = widget.repo || 'apostrophecms/apostrophe';
 const state = widget.state || 'open';
 const limit = widget.limit || 5;

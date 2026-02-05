@@ -5,9 +5,7 @@ export default {
     previewImage: 'svg',
     inlineStyles: false,
     className: 'widget demo-image',
-    dimensionAttrs: true,
-    size: 'full',
-    loadingType: 'lazy'
+    dimensionAttrs: true
   },
   styles: {
     add: {
@@ -137,8 +135,6 @@ export default {
         return {
           ..._super(widget, { scene }),
           className: self.options.className,
-          size: self.options.size,
-          loadingType: self.options.loadingType,
           dimensionAttrs: self.options.dimensionAttrs
         };
       }

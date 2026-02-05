@@ -20,9 +20,6 @@ apostrophe({
     // Manage page and piece SEO metadata
     '@apostrophecms/seo': {},
 
-    // Template helpers
-    helper: {},
-
     // Manage site's favicon via the Global Settings menu
     '@apostrophecms/favicon': {},
 
@@ -67,7 +64,6 @@ apostrophe({
     'article-category': {},
 
     // Import and export content
-    '@apostrophecms/import-export': {},
-    asset: {}
+    '@apostrophecms/import-export': {}
   }
 });
