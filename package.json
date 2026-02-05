@@ -3,10 +3,19 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "install-all": "npm install --prefix backend && npm install --prefix frontend",
-    "dev-backend": "cd backend && npm run dev",
-    "dev-frontend": "cd frontend && npm run dev",
-    "dev": "concurrently \"npm run dev-backend\" \"npm run dev-frontend\""
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "postinstall": "npm run install-frontend && npm run install-backend && echo '\\n💡 combined npm install complete'",
+    "install-frontend": "cd frontend && echo '\\n💡 running npm install in frontend/' && npm install",
+    "install-backend": "cd backend && echo '\\n💡 running npm install in backend/' && npm install",
+    "update": "npm run update-frontend && npm run update-backend && echo '\\n💡 combined npm update complete'",
+    "update-frontend": "cd frontend && echo '\\n💡 running npm update in frontend/' && npm update",
+    "update-backend": "cd backend && echo '\\n💡 running npm update in backend/' && npm update",
+    "build": "npm run build-frontend && npm run build-backend && echo '\\n💡 combined npm build complete'",
+    "build-frontend": "cd frontend && echo '\\n💡 running npm run build in frontend/' && npm run build",
+    "build-backend": " cd backend && echo '\\n💡 running npm run build in backend/' && npm run build",
+    "migrate": "cd backend && npm run migrate",
+    "serve-frontend": "cd frontend && npm run serve",
+    "serve-backend": "cd backend && npm run serve"
   },
   "devDependencies": {
     "concurrently": "^8.2.2"
