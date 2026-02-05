@@ -12,6 +12,11 @@ export default {
       de: {
         label: 'German',
         prefix: '/de'
+      },
+      he: {
+        label: 'Hebrew',
+        prefix: '/he',
+        direction: 'rtl'
       }
     },
     adminLocales: [
