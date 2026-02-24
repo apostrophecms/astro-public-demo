@@ -6,6 +6,7 @@
     "dev": "cross-env APOS_EXTERNAL_FRONT_KEY=dev astro dev",
     "start": "astro dev",
     "build": "astro build",
+    "build:static": "APOS_BUILD=static APOS_EXTERNAL_FRONT_KEY=dev astro build",
     "serve": "HOST=0.0.0.0 PORT=4321 node ./dist/server/entry.mjs",
     "preview": "astro preview",
     "astro": "astro"
