@@ -1,5 +1,6 @@
 ---
 import { getAllStaticPaths } from "@apostrophecms/apostrophe-astro/lib/static.js";
+import { getAposHost } from "@apostrophecms/apostrophe-astro/helpers";
 import aposPageFetch from "@apostrophecms/apostrophe-astro/lib/aposPageFetch.js";
 import AposLayout from "@apostrophecms/apostrophe-astro/components/layouts/AposLayout.astro";
 import AposTemplate from "@apostrophecms/apostrophe-astro/components/AposTemplate.astro";
@@ -11,7 +12,7 @@ import "../styles/styles.css";
 
 export async function getStaticPaths() {
   return getAllStaticPaths({
-    aposHost: import.meta.env.APOS_HOST || "http://localhost:3000",
+    aposHost: getAposHost(),
     aposExternalFrontKey: import.meta.env.APOS_EXTERNAL_FRONT_KEY,
   });
 }
