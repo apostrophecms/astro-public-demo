@@ -28,7 +28,7 @@ export default defineConfig({
         // 'host'
       ]
     })
-  ].filter(Boolean),
+  ],
   vite: {
     ssr: {
       // Do not externalize the @apostrophecms/apostrophe-astro plugin, we need
