@@ -1,17 +1,16 @@
 import { defineConfig } from 'astro/config';
 import node from '@astrojs/node';
 import apostrophe from '@apostrophecms/apostrophe-astro';
+const isStatic = process.env.APOS_BUILD === 'static';
 
 export default defineConfig({
-  output: 'server',
+  output: isStatic ? 'static' : 'server',
   server: {
     port: process.env.PORT ? parseInt(process.env.PORT) : 4321,
     // Required for some hosting, like Heroku
     // host: true
   },
-  adapter: node({
-    mode: 'standalone'
-  }),
+  adapter: isStatic ? undefined : node({ mode: 'standalone' }),
   integrations: [
     apostrophe({
       aposHost: 'http://localhost:3000',

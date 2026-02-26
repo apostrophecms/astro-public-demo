@@ -2,7 +2,10 @@ export default {
   extend: '@apostrophecms/piece-page-type',
   options: {
     label: 'project:articleIndexPage',
-    pluralLabel: 'project:articleIndexPages'
+    pluralLabel: 'project:articleIndexPages',
+    piecesFilters: [
+      { name: 'categories' }
+    ]
   },
   fields: {
     add: {
@@ -17,14 +20,5 @@ export default {
         }
       }
     }
-  },
-  methods(self) {
-    return {
-      async beforeIndex(req) {
-        req.data._categories = await self.apos.category.find(req).sort({ createdAt: -1 }).toArray();
-      }
-    };
   }
-  // Infers from its name that it will display an index of articles,
-  // as well as serving subpages for them
 };

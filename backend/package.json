@@ -22,6 +22,7 @@
     "@apostrophecms/import-export": "^2.4.1",
     "@apostrophecms/open-graph": "^1.2.3",
     "@apostrophecms/seo": "^1.2.3",
+    "@apostrophecms/sitemap": "^1.2.0",
     "@apostrophecms/vite": "^1.1.0",
     "apostrophe": "^4.24.1",
     "cross-env": "^10.1.0",

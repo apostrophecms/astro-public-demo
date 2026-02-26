@@ -3,6 +3,11 @@ import apostrophe from 'apostrophe';
 apostrophe({
   root: import.meta,
   shortName: 'astro-public-demo',
+  // Overridden by APOS_BASE_URL
+  baseUrl: 'http://localhost:3000',
+  // The base URL when static building the Astro frontend.
+  // Overridden by APOS_STATIC_BASE_URL
+  // staticBaseUrl: 'http://static.localhost:3000',
   modules: {
 
     // Apostrophe module configuration
@@ -25,6 +30,9 @@ apostrophe({
 
     // Manage page and piece open graph data
     '@apostrophecms/open-graph': {},
+
+    // Generate XML sitemaps
+    '@apostrophecms/sitemap': {},
 
     // Widgets
     '@apostrophecms/rich-text-widget': {},
