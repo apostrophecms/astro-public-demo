@@ -5,7 +5,9 @@ const isStatic = process.env.APOS_BUILD === 'static';
 
 export default defineConfig({
   output: isStatic ? 'static' : 'server',
-  ...(isStatic && process.env.ASTRO_BASE ? { base: process.env.ASTRO_BASE } : {}),
+  // URL path prefix for non-root hosting (e.g. GitHub Pages).
+  // Set APOS_PREFIX=/my-repo to enable. No trailing slash.
+  base: process.env.APOS_PREFIX || undefined,
   server: {
     port: process.env.PORT ? parseInt(process.env.PORT) : 4321,
     // Required for some hosting, like Heroku

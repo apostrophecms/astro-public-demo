@@ -6,7 +6,8 @@
  * Build the Astro frontend as a static site and deploy to GitHub Pages.
  *
  * Prerequisites:
- *   - The ApostropheCMS backend must be running (`npm run dev` in backend/)
+ *   - The ApostropheCMS backend must be running with the right env vars
+ *     (e.g. `APOS_PREFIX=/<repo> APOS_STATIC_BASE_URL=https://<owner>.github.io npm run serve:gh` in backend/)
  *   - Git remote 'origin' must point to a GitHub repository
  *
  * Usage:
@@ -59,9 +60,10 @@ Options:
 
 Prerequisites:
   The ApostropheCMS backend must be running before building.
-  The backend must have APOS_STATIC_BASE_URL set to the GitHub Pages URL:
+  Start it with the right env vars (the script will tell you the exact command):
 
-    APOS_STATIC_BASE_URL=https://<owner>.github.io/<repo> npm run dev   (in backend/)
+    cd backend
+    APOS_PREFIX=/<repo> APOS_STATIC_BASE_URL=https://<owner>.github.io npm run serve:gh
 `);
   process.exit(0);
 }
@@ -91,15 +93,17 @@ async function main() {
   }
 
   const [, owner, repo] = repoMatch;
-  const basePath = `/${repo}/`;
-  const siteUrl = `https://${owner}.github.io${basePath}`;
+  const prefix = `/${repo}`;
+  const siteOrigin = `https://${owner}.github.io`;
+  const siteUrl = `${siteOrigin}${prefix}/`;
 
   console.log('');
   console.log(`  Repository:  ${owner}/${repo}`);
-  console.log(`  Base path:   ${basePath}`);
+  console.log(`  Prefix:      ${prefix}`);
   console.log(`  Site URL:    ${siteUrl}`);
   console.log(`  Deploy to:   branch '${DEPLOY_BRANCH}'`);
-  console.log(`  Static URL:  APOS_STATIC_BASE_URL=${siteUrl}`);
+  console.log(`  Env:         APOS_PREFIX=${prefix}`);
+  console.log(`  Env:         APOS_STATIC_BASE_URL=${siteOrigin}`);
   if (DRY_RUN) console.log('  Mode:        DRY RUN (no push)');
   if (NO_BUILD) console.log('  Mode:        SKIP BUILD (reuse dist/)');
   console.log('');
@@ -109,13 +113,13 @@ async function main() {
     step('check', 'Checking backend availability...');
     try {
       execSync(
-        `curl -sf -o /dev/null --head --max-time 5 ${BACKEND_URL}${basePath}`,
+        `curl -sf -o /dev/null --head --max-time 5 ${BACKEND_URL}${prefix}/`,
         { timeout: 10000, stdio: 'pipe' }
       );
       console.log(`  Backend is running at ${BACKEND_URL}`);
     } catch {
       console.error(`  Error: Backend is not responding at ${BACKEND_URL}`);
-      console.error('  Start it first: cd backend && npm run dev');
+      console.error(`  Start it with: cd backend && APOS_PREFIX=${prefix} APOS_STATIC_BASE_URL=${siteOrigin} npm run serve:gh`);
       process.exit(1);
     }
 
@@ -124,11 +128,14 @@ async function main() {
     if (existsSync(DIST)) {
       rmSync(DIST, { recursive: true, force: true });
     }
-    run('npm run build:static', {
+    run('npm run build', {
       cwd: FRONTEND,
       env: {
         ...process.env,
-        ASTRO_BASE: basePath
+        NODE_ENV: 'production',
+        APOS_PREFIX: prefix,
+        APOS_BUILD: 'static',
+        APOS_EXTERNAL_FRONT_KEY: process.env.APOS_EXTERNAL_FRONT_KEY || 'dev'
       }
     });
   }

@@ -55,7 +55,7 @@ if (article?.blurb && !article.blurb.options) {
             <a
               href={
                 categoryUrls[category.slug] ||
-                `${article._parentUrl}?categories=${category.slug}`
+                `${article._parentUrl}/categories/${category.slug}`
               }
               class="chip"
             >

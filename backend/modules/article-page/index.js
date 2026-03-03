@@ -4,7 +4,8 @@ export default {
     label: 'project:articleIndexPage',
     pluralLabel: 'project:articleIndexPages',
     piecesFilters: [
-      { name: 'categories' }
+      { name: 'categories' },
+      { name: 'author' }
     ]
   },
   fields: {

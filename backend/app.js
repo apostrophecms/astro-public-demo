@@ -4,10 +4,12 @@ apostrophe({
   root: import.meta,
   shortName: 'astro-public-demo',
   // Overridden by APOS_BASE_URL
-  baseUrl: 'http://localhost:3000',
+  baseUrl: 'http://localhost:4321',
   // The base URL when static building the Astro frontend.
   // Overridden by APOS_STATIC_BASE_URL
-  // staticBaseUrl: 'http://static.localhost:3000',
+  staticBaseUrl: 'http://static.localhost:3000',
+  // URL path prefix for non-root hosting (e.g. GitHub Pages).
+  prefix: process.env.APOS_PREFIX || '',
   modules: {
 
     // Apostrophe module configuration

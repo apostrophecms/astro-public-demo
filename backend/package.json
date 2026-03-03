@@ -8,6 +8,7 @@
     "dev": "cross-env APOS_EXTERNAL_FRONT_KEY=dev APOS_DEV=1 nodemon",
     "build": "cross-env NODE_ENV=production node app @apostrophecms/asset:build",
     "serve": "cross-env NODE_ENV=production node app",
+    "serve:gh": "cross-env NODE_ENV=production APOS_EXTERNAL_FRONT_KEY=dev node app",
     "release": "npm install && npm run build && npm run migrate",
     "migrate": "cross-env NODE_ENV=production node app @apostrophecms/migration:migrate",
     "staging-deploy": "echo \"ℹ️  Clearing module links and installed modules to deploy.\" && rm package-lock.json && rm -r node_modules && npm i && sc-deploy staging",
