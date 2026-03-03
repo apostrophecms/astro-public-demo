@@ -5,6 +5,7 @@ const isStatic = process.env.APOS_BUILD === 'static';
 
 export default defineConfig({
   output: isStatic ? 'static' : 'server',
+  ...(isStatic && process.env.ASTRO_BASE ? { base: process.env.ASTRO_BASE } : {}),
   server: {
     port: process.env.PORT ? parseInt(process.env.PORT) : 4321,
     // Required for some hosting, like Heroku
