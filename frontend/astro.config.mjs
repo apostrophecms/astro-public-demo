@@ -41,6 +41,7 @@ export default defineConfig({
     css: {
       preprocessorOptions: {
         scss: {
+          additionalData: `$base-path: "${process.env.APOS_PREFIX || ''}";`,
           silenceDeprecations: ['legacy-js-api', 'import', 'global-builtin'],
         }
       }

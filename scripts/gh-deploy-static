@@ -11,7 +11,7 @@
  *   - Git remote 'origin' must point to a GitHub repository
  *
  * Usage:
- *   ./scripts/deploy-static [options]
+ *   ./scripts/gh-deploy-static [options]
  *
  * Options:
  *   --dry-run           Build and prepare deployment without pushing to GitHub
@@ -45,7 +45,7 @@ const BACKEND_URL = (() => {
 })();
 
 if (args.includes('--help') || args.includes('-h')) {
-  const rel = relative(process.cwd(), __filename) || 'scripts/deploy-static';
+  const rel = relative(process.cwd(), __filename) || 'scripts/gh-deploy-static';
   console.log(`
 Build and deploy the static Astro frontend to GitHub Pages.
 
