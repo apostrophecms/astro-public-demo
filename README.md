@@ -97,10 +97,10 @@ npm run build:static
 
 ```bash
 cd frontend
-npx serve dist
+npm run preview:static
 ```
 
-Open the URL provided by `serve` to see the static version.
+Open `http://static.localhost:4000` to see the static version.
 
 For production builds:
 
