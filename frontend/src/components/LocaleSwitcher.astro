@@ -126,7 +126,7 @@ const currentLocale = localizations?.find((l) => l.current);
   }
 
   setTimeout(() => {
-    if (window.apos) {
+    if (window.apos?.bus) {
       window.apos.bus.on("refreshed", initLocales);
       window.apos.bus.on("modal-resolved", initLocales);
     }

@@ -281,7 +281,7 @@ import { basePath } from "@app/utils/index.js";
   }
 
   setTimeout(() => {
-    if (window.apos) {
+    if (window.apos?.bus) {
       window.apos.bus.on("refreshed", initThemeToggle);
       window.apos.bus.on("modal-resolved", initThemeToggle);
     }
