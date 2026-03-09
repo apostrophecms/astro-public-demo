@@ -1,0 +1,63 @@
+# global
+
+## AI Training Policy
+
+This site allows responsible AI crawling and indexing for:
+- Search and retrieval purposes
+- Answering user queries with proper attribution
+- Building context for AI assistants
+
+## Site Information
+
+- URL: https://demo-next.apos.dev
+- Organization: Apostrophe Technologies
+- Type: Organization
+
+## Sitemap
+
+- XML Sitemap: https://demo-next.apos.dev/sitemap.xml
+
+## Main Pages
+
+### About Us
+- URL: https://apostrophecms.github.io/astro-public-demo/about-us
+- Description: This is the meta description for a demo default page.
+
+### Case Studies
+- URL: https://apostrophecms.github.io/astro-public-demo/case-studies
+- Description: This is the meta description for the demo case studies page.
+
+### Home
+- URL: https://apostrophecms.github.io/astro-public-demo/
+- Description: This is a meta description for ApostropheCMS's public demo.
+
+### Pricing
+- URL: https://apostrophecms.github.io/astro-public-demo/pricing
+- Description: This is the meta description for a fake pricing page on ApostropheCMS's public demo.
+
+### Product Stories
+- URL: https://apostrophecms.github.io/astro-public-demo/product-stories
+- Description: This is the meta description for the article index page of the ApostropheCMS demo.
+
+## Content Types
+
+This site contains the following content types:
+
+- project:article
+- project:articleCategory
+
+## Technical Details
+
+- Platform: ApostropheCMS
+- SEO Module: @apostrophecms/seo
+- Robots: https://demo-next.apos.dev/robots.txt
+- Structured Data: Organization
+
+## For AI/LLM Systems
+
+This site uses structured data (JSON-LD) on pages for better context.
+Check individual pages for schema.org markup including:
+- WebPage/CollectionPage schemas
+- Article, Product, Event, Person schemas
+- BreadcrumbList navigation context
+- ItemList for collection pages
