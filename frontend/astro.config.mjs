@@ -26,7 +26,7 @@ export default defineConfig({
       ],
       excludeRequestHeaders: [
         // Must exclude this for separate apostrophe and astro hosting to work
-        // 'host'
+        'host'
       ]
     })
   ],
