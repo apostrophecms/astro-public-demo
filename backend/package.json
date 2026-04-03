@@ -23,7 +23,7 @@
     "@apostrophecms/open-graph": "^1.2.3",
     "@apostrophecms/seo": "^1.4.0",
     "@apostrophecms/vite": "^1.1.1",
-    "apostrophe": "github:apostrophecms/apostrophe#main",
+    "apostrophe": "^4.24.1",
     "cross-env": "^10.1.0",
     "klona": "^2.0.6"
   },
@@ -57,5 +57,10 @@
     "eslint-config-apostrophe": "^3.4.2",
     "eslint-plugin-node": "^11.1.0",
     "nodemon": "^2.0.22"
+  },
+  "pnpm": {
+    "overrides": {
+      "apostrophe": "github:apostrophecms/apostrophe#main"
+    }
   }
 }
