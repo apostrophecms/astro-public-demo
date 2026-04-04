@@ -4,6 +4,15 @@ import apostrophe from '@apostrophecms/apostrophe-astro';
 
 export default defineConfig({
   output: 'server',
+  security: {
+    checkOrigin: false,
+    allowedDomains: [
+      {
+        hostname: '**.apos.dev',
+        protocol: 'https',
+      },
+    ],
+  },
   server: {
     port: process.env.PORT ? parseInt(process.env.PORT) : 4321,
     // Required for some hosting, like Heroku
