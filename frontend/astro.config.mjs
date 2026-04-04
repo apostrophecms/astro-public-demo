@@ -5,7 +5,6 @@ import apostrophe from '@apostrophecms/apostrophe-astro';
 export default defineConfig({
   output: 'server',
   security: {
-    checkOrigin: false,
     allowedDomains: [
       {
         hostname: '**.apos.dev',
