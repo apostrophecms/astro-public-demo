@@ -23,6 +23,7 @@ This hybrid approach combines:
 
 **Widgets:**
 - Core content widgets (rich text, image, video, file)
+- Layout widgets (layout, layout column) for structured page composition
 - Marketing components (hero, button, card, price card)
 - Article widget for content relationships
 - GitHub PRs widget demonstrating external API integration
@@ -157,12 +158,40 @@ Deploy the backend and frontend separately:
 
 **Frontend:** Any SSR-capable host (Netlify, Vercel, Cloudflare Pages, etc.) with the `APOS_EXTERNAL_FRONT_KEY` environment variable set
 
-## Production-Ready Starter Kits
+**Important: Production Security Configuration**
 
-This demo focuses on core integration patterns. For production projects with complete design systems and advanced features, check out:
+Astro requires an `allowedDomains` entry in `astro.config.mjs` for certain
+ApostropheCMS operations — including file uploads and logout — to work correctly
+in production. Without it, those operations will silently fail with a 403.
+This does **not** affect local development.
 
-- **[Apollo Starter Kit](https://github.com/apostrophecms/starter-kit-astro-apollo)** - Production-ready with Bulma design system
-- **[Astro Essentials](https://github.com/apostrophecms/starter-kit-astro-essentials)** - Minimal foundation for custom designs
+Add your ApostropheCMS backend domain to the `security` block in
+`frontend/astro.config.mjs`:
+
+```js
+export default defineConfig({
+  // ... other config
+  security: {
+    allowedDomains: [
+      {
+        hostname: 'your-apos-backend.com',
+        protocol: 'https'
+      }
+    ]
+  }
+});
+```
+
+This tells Astro to trust `X-Forwarded-Host` headers from your backend, which
+it uses to construct the request origin for CSRF validation. Setting
+`checkOrigin: false` alone is **not** sufficient.
+
+> Requires `astro@5.14.2` or later. Wildcard hostnames (e.g.
+> `*.yourdomain.com`) are supported if your backend and frontend share a domain.
+
+## Production-Ready Starter Kit
+
+This demo focuses on core integration patterns. When you're ready to build a production project, the **[Astro Essentials Starter Kit](https://github.com/apostrophecms/starter-kit-astro-essentials)** provides a minimal foundation you can build your own design system on top of.
 
 Need enterprise features like advanced permissions, automated translation, or document versioning? [Contact us](https://apostrophecms.com/contact-us) to learn about ApostropheCMS Pro.
 
