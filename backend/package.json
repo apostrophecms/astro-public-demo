@@ -57,10 +57,5 @@
     "eslint-config-apostrophe": "^3.4.2",
     "eslint-plugin-node": "^11.1.0",
     "nodemon": "^2.0.22"
-  },
-  "pnpm": {
-    "overrides": {
-      "apostrophe": "github:apostrophecms/apostrophe#main"
-    }
   }
 }
