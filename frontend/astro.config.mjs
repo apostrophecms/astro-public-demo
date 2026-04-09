@@ -2,15 +2,17 @@ import { defineConfig } from 'astro/config';
 import node from '@astrojs/node';
 import apostrophe from '@apostrophecms/apostrophe-astro';
 
+const allowedDomains = process.env.APOS_ALLOWED_DOMAINS
+  ? process.env.APOS_ALLOWED_DOMAINS.split(',').map(hostname => ({
+      hostname: hostname.trim(),
+      protocol: 'https',
+    }))
+  : [ { hostname: '**.apos.dev', protocol: 'https' } ];
+
 export default defineConfig({
   output: 'server',
   security: {
-    allowedDomains: [
-      {
-        hostname: '**.apos.dev',
-        protocol: 'https',
-      },
-    ],
+    allowedDomains,
   },
   server: {
     port: process.env.PORT ? parseInt(process.env.PORT) : 4321,
