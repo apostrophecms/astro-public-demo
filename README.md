@@ -52,11 +52,13 @@ npm run install-all
 
 ### Development
 
-Set the environment variable in your terminal:
+Set the environment variables in your terminal:
 
 ```bash
 export APOS_EXTERNAL_FRONT_KEY=dev
 ```
+
+> `APOS_ALLOWED_DOMAINS` is not needed for local development — it defaults to `**.apos.dev` for ApostropheCMS hosting. Set it when self-hosting with a custom backend domain (see [Deployment](#deployment)).
 
 Then start both servers:
 
@@ -156,7 +158,12 @@ Deploy the backend and frontend separately:
 
 **Backend:** Any Node.js host with MongoDB access (see [hosting docs](https://docs.apostrophecms.org/guide/hosting.html))
 
-**Frontend:** Any SSR-capable host (Netlify, Vercel, Cloudflare Pages, etc.) with the `APOS_EXTERNAL_FRONT_KEY` environment variable set
+**Frontend:** Any SSR-capable host (Netlify, Vercel, Cloudflare Pages, etc.) with these environment variables set:
+
+| Variable | Required | Description |
+|---|---|---|
+| `APOS_EXTERNAL_FRONT_KEY` | Yes | Shared secret between the Astro frontend and ApostropheCMS backend |
+| `APOS_ALLOWED_DOMAINS` | Yes | Comma-separated list of backend hostname patterns Astro is allowed to proxy to. Wildcards are supported (e.g. `mysite.apos.dev`, `**.example.com`, or `api.example.com,**.cdn.example.com`). Defaults to `**.apos.dev`. |
 
 **Important: Production Security Configuration**
 
