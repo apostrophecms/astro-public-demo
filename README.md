@@ -23,6 +23,7 @@ This hybrid approach combines:
 
 **Widgets:**
 - Core content widgets (rich text, image, video, file)
+- Layout widgets (layout, layout column) for structured page composition
 - Marketing components (hero, button, card, price card)
 - Article widget for content relationships
 - GitHub PRs widget demonstrating external API integration
@@ -51,11 +52,13 @@ npm run install-all
 
 ### Development
 
-Set the environment variable in your terminal:
+Set the environment variables in your terminal:
 
 ```bash
 export APOS_EXTERNAL_FRONT_KEY=dev
 ```
+
+> `APOS_ALLOWED_DOMAINS` is not needed for local development — it defaults to `**.apos.dev` for ApostropheCMS hosting. Set it when self-hosting with a custom backend domain (see [Deployment](#deployment)).
 
 Then start both servers:
 
@@ -155,14 +158,47 @@ Deploy the backend and frontend separately:
 
 **Backend:** Any Node.js host with MongoDB access (see [hosting docs](https://docs.apostrophecms.org/guide/hosting.html))
 
-**Frontend:** Any SSR-capable host (Netlify, Vercel, Cloudflare Pages, etc.) with the `APOS_EXTERNAL_FRONT_KEY` environment variable set
+**Frontend:** Any SSR-capable host (Netlify, Vercel, Cloudflare Pages, etc.) with these environment variables set:
 
-## Production-Ready Starter Kits
+| Variable | Required | Description |
+|---|---|---|
+| `APOS_EXTERNAL_FRONT_KEY` | Yes | Shared secret between the Astro frontend and ApostropheCMS backend |
+| `APOS_ALLOWED_DOMAINS` | Yes | Comma-separated list of backend hostname patterns Astro is allowed to proxy to. Wildcards are supported (e.g. `mysite.apos.dev`, `**.example.com`, or `api.example.com,**.cdn.example.com`). Defaults to `**.apos.dev`. |
 
-This demo focuses on core integration patterns. For production projects with complete design systems and advanced features, check out:
+**Important: Production Security Configuration**
 
-- **[Apollo Starter Kit](https://github.com/apostrophecms/starter-kit-astro-apollo)** - Production-ready with Bulma design system
-- **[Astro Essentials](https://github.com/apostrophecms/starter-kit-astro-essentials)** - Minimal foundation for custom designs
+Astro requires an `allowedDomains` entry in `astro.config.mjs` for certain
+ApostropheCMS operations — including file uploads and logout — to work correctly
+in production. Without it, those operations will silently fail with a 403.
+This does **not** affect local development.
+
+Add your ApostropheCMS backend domain to the `security` block in
+`frontend/astro.config.mjs`:
+
+```js
+export default defineConfig({
+  // ... other config
+  security: {
+    allowedDomains: [
+      {
+        hostname: 'your-apos-backend.com',
+        protocol: 'https'
+      }
+    ]
+  }
+});
+```
+
+This tells Astro to trust `X-Forwarded-Host` headers from your backend, which
+it uses to construct the request origin for CSRF validation. Setting
+`checkOrigin: false` alone is **not** sufficient.
+
+> Requires `astro@5.14.2` or later. Wildcard hostnames (e.g.
+> `*.yourdomain.com`) are supported if your backend and frontend share a domain.
+
+## Production-Ready Starter Kit
+
+This demo focuses on core integration patterns. When you're ready to build a production project, the **[Astro Essentials Starter Kit](https://github.com/apostrophecms/starter-kit-astro-essentials)** provides a minimal foundation you can build your own design system on top of.
 
 Need enterprise features like advanced permissions, automated translation, or document versioning? [Contact us](https://apostrophecms.com/contact-us) to learn about ApostropheCMS Pro.
 
