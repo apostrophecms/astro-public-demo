@@ -1,6 +1,7 @@
 import { defineConfig } from 'astro/config';
 import node from '@astrojs/node';
 import apostrophe from '@apostrophecms/apostrophe-astro';
+const isStatic = process.env.APOS_BUILD === 'static';
 
 const allowedDomains = process.env.APOS_ALLOWED_DOMAINS
   ? process.env.APOS_ALLOWED_DOMAINS.split(',').map(hostname => ({
@@ -10,7 +11,10 @@ const allowedDomains = process.env.APOS_ALLOWED_DOMAINS
   : [ { hostname: '**.apos.dev', protocol: 'https' } ];
 
 export default defineConfig({
-  output: 'server',
+  output: isStatic ? 'static' : 'server',
+  // URL path prefix for non-root hosting (e.g. GitHub Pages).
+  // Set APOS_PREFIX=/my-repo to enable. No trailing slash.
+  base: process.env.APOS_PREFIX || undefined,
   security: {
     allowedDomains,
   },
@@ -19,9 +23,7 @@ export default defineConfig({
     // Required for some hosting, like Heroku
     // host: true
   },
-  adapter: node({
-    mode: 'standalone'
-  }),
+  adapter: isStatic ? undefined : node({ mode: 'standalone' }),
   integrations: [
     apostrophe({
       aposHost: 'http://localhost:3000',
@@ -49,6 +51,7 @@ export default defineConfig({
     css: {
       preprocessorOptions: {
         scss: {
+          additionalData: `$base-path: "${process.env.APOS_PREFIX || ''}";`,
           silenceDeprecations: ['legacy-js-api', 'import', 'global-builtin'],
         }
       }

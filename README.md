@@ -78,6 +78,99 @@ cd frontend && npm run dev
 
 Visit `http://localhost:4321` to see the site.
 
+### Static Build
+
+Generate a fully static version of the site served from the root path (`/`).
+
+**1. Start the backend:**
+
+```bash
+cd backend
+npm run dev
+```
+
+**2. Build the static frontend** (in a second terminal):
+
+```bash
+cd frontend
+npm run build:static
+```
+
+**3. Preview the build:**
+
+```bash
+cd frontend
+npm run preview:static
+```
+
+Open `http://static.localhost:4000` to see the static version.
+
+For production builds:
+
+```bash
+# Terminal 1 - Backend
+cd backend
+export NODE_ENV=production
+APOS_EXTERNAL_FRONT_KEY=dev npm run serve
+
+# Terminal 2 - Frontend
+cd frontend
+export NODE_ENV=production
+npm run build:static
+```
+
+> Note: You can change the `APOS_EXTERNAL_FRONT_KEY` value for the `build:static` command.
+
+### Static Build (GitHub Pages)
+
+You can generate a fully static site and deploy it to GitHub Pages (or any static host that serves from a sub-path).
+
+**1. Start the backend** with the prefix and base URL for your GitHub Pages site:
+
+```bash
+cd backend
+export NODE_ENV=production
+export APOS_PREFIX=/<your-repo>
+export APOS_STATIC_BASE_URL=https://<your-github-user>.github.io
+npm run serve:gh
+```
+
+**2. Build the static frontend** (in a second terminal):
+
+```bash
+cd frontend
+export NODE_ENV=production
+export APOS_PREFIX=/<your-repo>
+npm run build:gh
+```
+
+The output is in `frontend/dist/` and ready to be served from `/<your-repo>/`.
+
+For this repository, the commands are:
+
+```bash
+# Terminal 1 - Backend
+cd backend
+export NODE_ENV=production
+export APOS_PREFIX=/astro-public-demo
+export APOS_STATIC_BASE_URL=https://apostrophecms.github.io
+npm run serve:gh
+
+# Terminal 2 - Frontend
+cd frontend
+export NODE_ENV=production
+export APOS_PREFIX=/astro-public-demo
+npm run build:gh
+```
+
+**Alternatively, use the deploy script** to build and push to GitHub Pages in one step (the backend must be running as described above):
+
+```bash
+./scripts/gh-deploy-static
+```
+
+The script auto-detects `<your-github-user>` and `<your-repo>` from the `origin` remote, starts the build, and pushes to the `gh-pages` branch. Run `./scripts/gh-deploy-static --help` for options like `--dry-run` and `--no-build`.
+
 ### Create an Admin User
 
 ```bash
