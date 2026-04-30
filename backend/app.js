@@ -3,6 +3,7 @@ import apostrophe from 'apostrophe';
 apostrophe({
   root: import.meta,
   shortName: 'astro-public-demo',
+  bundles: [ '@apostrophecms/blog' ],
   // Overridden by APOS_BASE_URL
   baseUrl: 'http://localhost:4321',
   // The base URL when static building the Astro frontend.
@@ -61,14 +62,15 @@ apostrophe({
     // A page type for ordinary pages
     'default-page': {},
 
-    // A piece type for articles
+    // Extends @apostrophecms/blog
     article: {},
+
+    // Extends @apostrophecms/blog-page.
+    // Paginated index of articles, with "show pages" for individual articles
+    'article-page': {},
 
     // Tease an article on any page
     'article-widget': {},
-
-    // Paginated index of articles, and with pages for individual articles
-    'article-page': {},
 
     // A piece type for categorizing articles
     'article-category': {},
