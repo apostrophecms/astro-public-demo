@@ -3,6 +3,14 @@ import apostrophe from 'apostrophe';
 apostrophe({
   root: import.meta,
   shortName: 'astro-public-demo',
+  bundles: [ '@apostrophecms/blog' ],
+  // Overridden by APOS_BASE_URL
+  baseUrl: 'http://localhost:4321',
+  // The base URL when static building the Astro frontend.
+  // Overridden by APOS_STATIC_BASE_URL
+  staticBaseUrl: 'http://static.localhost:4000',
+  // URL path prefix for non-root hosting (e.g. GitHub Pages).
+  prefix: process.env.APOS_PREFIX || '',
   modules: {
 
     // Apostrophe module configuration
@@ -25,6 +33,9 @@ apostrophe({
 
     // Manage page and piece open graph data
     '@apostrophecms/open-graph': {},
+
+    // Generate XML sitemaps
+    '@apostrophecms/sitemap': {},
 
     // Widgets
     '@apostrophecms/rich-text-widget': {},
@@ -51,14 +62,15 @@ apostrophe({
     // A page type for ordinary pages
     'default-page': {},
 
-    // A piece type for articles
+    // Extends @apostrophecms/blog
     article: {},
+
+    // Extends @apostrophecms/blog-page.
+    // Paginated index of articles, with "show pages" for individual articles
+    'article-page': {},
 
     // Tease an article on any page
     'article-widget': {},
-
-    // Paginated index of articles, and with pages for individual articles
-    'article-page': {},
 
     // A piece type for categorizing articles
     'article-category': {},
