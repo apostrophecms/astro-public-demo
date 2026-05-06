@@ -76,6 +76,7 @@ apostrophe({
     'article-category': {},
 
     // Import and export content
-    '@apostrophecms/import-export': {}
+    '@apostrophecms/import-export': {},
+    'custom-layout-widget': {}
   }
 });

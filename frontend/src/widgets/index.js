@@ -25,7 +25,8 @@ const widgetComponents = {
   'card-content-rt': RichTextWidget,
   'price-card': PriceCardWidget,
   'article': ArticleWidget,
-  'github-prs': GithubPrsWidget
+  'github-prs': GithubPrsWidget,
+  'custom-layout-widget': LayoutWidget
 };
 
 export default widgetComponents;

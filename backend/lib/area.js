@@ -98,7 +98,8 @@ const fullConfigExpandedGroups = {
   layout: {
     label: 'project:layoutTools',
     widgets: {
-      '@apostrophecms/layout': {}
+      '@apostrophecms/layout': {},
+      'custom-layout': {}
     },
     columns: 1
   },
