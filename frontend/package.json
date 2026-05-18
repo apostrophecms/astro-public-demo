@@ -15,8 +15,8 @@
   },
   "dependencies": {
     "@apostrophecms/apostrophe-astro": "^1.4.0",
-    "@astrojs/node": "^9.4.3",
-    "astro": "^5.13.7",
+    "@astrojs/node": "^10.1.1",
+    "astro": "^6.3.3",
     "cross-env": "^10.1.0",
     "dayjs": "^1.11.10",
     "postcss-viewport-to-container-toggle": "^1.1.0",
