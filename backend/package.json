@@ -29,6 +29,7 @@
     "apostrophe": "^4.24.1",
     "cross-env": "^10.1.0",
     "dayjs": "^1.11.20",
+    "dotenv": "^17.4.2",
     "klona": "^2.0.6"
   },
   "author": "Apostrophe Technologies, Inc",
