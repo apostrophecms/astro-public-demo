@@ -8,42 +8,82 @@ import {
 } from "@apostrophecms/apostrophe-astro/lib/attachment.js";
 import { slugify } from "@apostrophecms/apostrophe-astro/lib/util.js";
 import placeholderImg from "../../public/images/image-widget-placeholder.jpg";
-import Figure from "../components/Figure.astro";
+
+interface ImageRelationship {
+  alt?: string;
+  attachment?: { _alt?: string };
+}
+
+interface ImageWidget {
+  _image?: ImageRelationship[];
+  caption?: string;
+  className?: string;
+  dimensionAttrs?: boolean;
+  aposPlaceholder?: boolean;
+  linkTo?: string;
+  linkHref?: string;
+  linkTitle?: string;
+  linkHrefTitle?: string;
+  linkTarget?: string;
+  target?: string;
+  // Relationship fields are referenced dynamically as `_${slugify(linkTo)}`.
+  [field: string]: any;
+}
+
+interface ImageLink {
+  url?: string;
+  title?: string;
+  target?: string;
+  rel: string | null;
+}
+
+export interface Props {
+  widget?: ImageWidget;
+  options?: {
+    className?: string;
+    dimensionAttrs?: boolean;
+  };
+}
 
 const { widget = {}, options = {} } = Astro.props;
 
-const className = options.className || widget.className || 'img-widget';
+const className = options.className || widget.className || "img-widget";
 const dimensionAttrs = options.dimensionAttrs ?? widget.dimensionAttrs ?? true;
 
-const placeholder = widget?.aposPlaceholder;
 const imageObj = widget?._image?.[0];
 
-const src = placeholder ? placeholderImg.src : getAttachmentUrl(imageObj);
+// Show the bundled placeholder when the widget is in placeholder mode or has
+// no image yet. This keeps the attachment helpers from ever receiving a
+// missing image, which would log a warning and yield a broken URL.
+let src = placeholderImg.src;
+let srcset = "";
+let objectPosition = "center center";
+let width: number | undefined;
+let height: number | undefined;
 
-const srcset = placeholder ? "" : getAttachmentSrcset(imageObj);
-const objectPosition = placeholder ? "center center" : getFocalPoint(imageObj);
-// Only add width/height if they exist to prevent layout shift
-const width = dimensionAttrs && imageObj ? getWidth(imageObj) : undefined;
-const height = dimensionAttrs && imageObj ? getHeight(imageObj) : undefined;
+if (imageObj && !widget?.aposPlaceholder) {
+  src = getAttachmentUrl(imageObj);
+  srcset = getAttachmentSrcset(imageObj);
+  objectPosition = getFocalPoint(imageObj);
+  // Only add width/height if they exist to prevent layout shift
+  if (dimensionAttrs) {
+    width = getWidth(imageObj);
+    height = getHeight(imageObj);
+  }
+}
+
 const aspectRatio = width && height ? `${width}/${height}` : undefined;
 
-let link = {
+const alt = imageObj?.alt || imageObj?.attachment?._alt || "";
+const imgStyle =
+  `object-position: ${objectPosition};${aspectRatio ? `--aspect-ratio: ${aspectRatio};` : ""}`.trim();
+
+let link: ImageLink | null = {
   url: widget.linkHref,
   title: widget.linkHrefTitle || widget.caption,
   target: widget.linkTarget,
   rel: null,
 };
-const image = {
-  src,
-  alt: imageObj?.alt || imageObj?.attachment?._alt || "",
-  style: className,
-  srcset,
-  objectPosition,
-  width,
-  height,
-  aspectRatio
-};
-let style = `${className}__wrapper`;
 
 switch (widget.linkTo) {
   case "none": {
@@ -56,7 +96,8 @@ switch (widget.linkTo) {
   }
   default: {
     // slugify the linkTo value to reference the widget field.
-    const name = "_" + slugify(widget.linkTo);
+    // Empty options due to bad function JSDoc, to be fixed in the slug helper.
+    const name = "_" + slugify(widget.linkTo as string, {});
     const item = widget[name]?.[0];
     link.url = item?._url;
     link.title = widget.linkTitle || item?.title;
@@ -65,4 +106,45 @@ switch (widget.linkTo) {
 }
 ---
 
-<Figure {image} {link} caption={widget.caption} {style} baseClassName={className} />
+<figure class={`${className}__wrapper`}>
+  {
+    link ? (
+      <a
+        href={link.url}
+        title={link.title}
+        target={link.target}
+        rel={link.rel}
+        class={`${className}__link`}
+      >
+        <img
+          class={className}
+          src={src}
+          alt={alt}
+          loading="lazy"
+          decoding="async"
+          srcset={srcset}
+          style={imgStyle}
+          width={width}
+          height={height}
+        />
+      </a>
+    ) : (
+      <img
+        class={className}
+        src={src}
+        alt={alt}
+        loading="lazy"
+        decoding="async"
+        srcset={srcset}
+        style={imgStyle}
+        width={width}
+        height={height}
+      />
+    )
+  }
+  {
+    widget.caption && (
+      <figcaption class={`${className}__caption`}>{widget.caption}</figcaption>
+    )
+  }
+</figure>
