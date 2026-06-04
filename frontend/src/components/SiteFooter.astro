@@ -238,6 +238,10 @@ import { basePath } from "@app/utils/index.js";
 <script is:inline>
   const KEY = "apostrophe-demo-visual-preference";
 
+  function getPref() {
+    return localStorage.getItem(KEY) || "light";
+  }
+
   function applyPref(pref) {
     const isDark = pref === "dark";
     document.body.classList.toggle("dark", isDark);
@@ -246,12 +250,10 @@ import { basePath } from "@app/utils/index.js";
     if (toggle) toggle.checked = isDark;
   }
 
-  function getPref() {
-    return localStorage.getItem(KEY) || "light";
-  }
+  // Apply the stored preference immediately to prevent a flash.
+  applyPref(getPref());
 
   function initThemeToggle() {
-    console.log("initialized");
     const toggle = document.querySelector("[data-mode-switch] input");
     if (!toggle) return;
 
@@ -281,9 +283,9 @@ import { basePath } from "@app/utils/index.js";
   }
 
   setTimeout(() => {
-    if (window.apos?.bus) {
-      window.apos.bus.on("refreshed", initThemeToggle);
-      window.apos.bus.on("modal-resolved", initThemeToggle);
+    if (typeof window.apos?.bus?.$on === "function") {
+      window.apos.bus.$on("refreshed", initThemeToggle);
+      window.apos.bus.$on("modal-resolved", initThemeToggle);
     }
   }, 300);
 </script>
