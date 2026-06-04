@@ -2,9 +2,14 @@
 import Icons from "../components/Icons.astro";
 import { getLinkPath, opensInNewTab } from "@app/utils/link.js";
 
+type PriceCardFeature = {
+  item?: string;
+};
+
 const { widget } = Astro.props;
 const path = getLinkPath(widget);
 const isBlank = opensInNewTab(widget.linkTarget);
+const features: PriceCardFeature[] = widget.features ?? [];
 ---
 
 <div
@@ -48,9 +53,9 @@ const isBlank = opensInNewTab(widget.linkTarget);
     )
   }
   {
-    widget.features?.length > 0 && (
+    features.length > 0 && (
       <ol class="price-card__features">
-        {widget.features.map((feature) => (
+        {features.map((feature) => (
           <li>{feature.item}</li>
         ))}
       </ol>
@@ -60,7 +65,7 @@ const isBlank = opensInNewTab(widget.linkTarget);
     widget.linkText && (
       <div class="price-card__link">
         <a
-          class="link button button--small price-card__button"
+          class={`link button ${widget.style || ""} button--small`}
           href={path}
           target={isBlank ? "_blank" : undefined}
         >

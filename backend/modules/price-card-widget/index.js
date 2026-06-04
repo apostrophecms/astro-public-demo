@@ -78,6 +78,21 @@ export default {
           }
         }
       },
+      style: {
+        type: 'select',
+        label: 'project:style',
+        def: 'primary',
+        choices: [
+          {
+            label: 'project:primary',
+            value: 'primary'
+          },
+          {
+            label: 'project:outline',
+            value: 'outline'
+          }
+        ]
+      },
       ...localLinkConfig
     }
   },
@@ -103,7 +118,7 @@ export default {
         label: 'project:textColor',
         selector: '.price-card-widget',
         property: 'color',
-        def: '--surface-color',
+        def: '--default-color',
         options: {
           presetColors: [
             '--accent-color',
