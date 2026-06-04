@@ -78,45 +78,50 @@ const currentLocale = localizations?.find((l) => l.current);
 
 <script>
   function initLocales() {
-    const locales = document.querySelector("[data-locales]");
-    const toggler = document.querySelector("[data-locales-toggle]");
-    const localeList = document.querySelector("[data-locales-list]");
+    // The switcher is rendered more than once (desktop nav + mobile nav),
+    // so wire up every instance and scope the queries to each one.
+    document.querySelectorAll("[data-locales]").forEach((locales) => {
+      const toggler = locales.querySelector("[data-locales-toggle]");
+      const localeList = locales.querySelector("[data-locales-list]");
 
-    if (!toggler || !localeList) {
-      return null; // Return null if not found
-    }
-
-    // Clean up previous instance if it exists
-    if (toggler._localeCleanup) {
-      toggler._localeCleanup();
-    }
-
-    function toggleLocales() {
-      const expanded =
-        toggler.getAttribute("aria-expanded") === "true" || false;
-      toggler.setAttribute("aria-expanded", !expanded);
-      localeList.hidden = expanded;
-    }
-
-    function clickOutside({ target }) {
-      const expanded =
-        toggler.getAttribute("aria-expanded") === "true" || false;
-      if (expanded && !locales.contains(target)) {
-        toggler.setAttribute("aria-expanded", false);
-        localeList.hidden = true;
+      if (!toggler || !localeList) {
+        return;
       }
-    }
 
-    toggler.addEventListener("click", toggleLocales);
-    window.addEventListener("click", clickOutside);
+      // Clean up previous instance if it exists
+      if (toggler._localeCleanup) {
+        toggler._localeCleanup();
+      }
 
-    const cleanup = () => {
-      toggler.removeEventListener("click", toggleLocales);
-      window.removeEventListener("click", clickOutside);
-    };
+      function toggleLocales() {
+        const expanded = toggler.getAttribute("aria-expanded") === "true";
+        toggler.setAttribute("aria-expanded", !expanded);
+        localeList.hidden = expanded;
 
-    toggler._localeCleanup = cleanup;
-    return cleanup;
+        // Only listen for outside clicks while the list is open.
+        if (!expanded) {
+          window.addEventListener("click", clickOutside);
+        } else {
+          window.removeEventListener("click", clickOutside);
+        }
+      }
+
+      function clickOutside({ target }) {
+        const expanded = toggler.getAttribute("aria-expanded") === "true";
+        if (expanded && !locales.contains(target)) {
+          toggler.setAttribute("aria-expanded", false);
+          localeList.hidden = true;
+          window.removeEventListener("click", clickOutside);
+        }
+      }
+
+      toggler.addEventListener("click", toggleLocales);
+
+      toggler._localeCleanup = () => {
+        toggler.removeEventListener("click", toggleLocales);
+        window.removeEventListener("click", clickOutside);
+      };
+    });
   }
 
   if (document.readyState === "loading") {
@@ -126,9 +131,9 @@ const currentLocale = localizations?.find((l) => l.current);
   }
 
   setTimeout(() => {
-    if (window.apos?.bus) {
-      window.apos.bus.on("refreshed", initLocales);
-      window.apos.bus.on("modal-resolved", initLocales);
+    if (typeof window.apos?.bus?.$on === "function") {
+      window.apos.bus.$on("refreshed", initLocales);
+      window.apos.bus.$on("modal-resolved", initLocales);
     }
   }, 300);
 </script>
