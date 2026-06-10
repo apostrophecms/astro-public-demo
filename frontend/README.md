@@ -1,26 +1,22 @@
 # Astro Frontend
 
-This is the frontend portion of the ApostropheCMS + Astro hybrid demo.
+The presentation layer for the ApostropheCMS + Astro hybrid demo — it fetches content from the ApostropheCMS backend via REST and maps it to Astro components, with support for in-context editing.
 
-## Running the Frontend
-
-For installation and setup instructions, see the [main README](../README.md) at the project root.
+## Running Standalone
 
 ```bash
 # From this directory
 npm run dev
 ```
 
-The frontend runs on `http://localhost:4321` and connects to the ApostropheCMS backend for content.
+Runs on **http://localhost:4321**. Requires the ApostropheCMS backend to be running on port 3000 for content. The admin UI is at `/login`.
 
-## Learning More About Astro
+> For full monorepo setup (install, environment variables, running both packages together), see the [root README](../README.md).
 
-This frontend uses standard Astro patterns with a few key integrations:
+## Working in This Package
 
-- **Single route system** - The `src/pages/[...slug].astro` file handles all routing via the CMS
-- **Component registries** - Templates and widgets are mapped in `src/templates/index.js` and `src/widgets/index.js`
-- **ApostropheCMS integration** - The `@apostrophecms/apostrophe-astro` package enables in-context editing and content fetching
+- **All routing** is handled by `src/pages/[...slug].astro` — the CMS drives the URL structure.
+- **Page type components** are mapped in `src/templates/index.js`; widget components in `src/widgets/index.js`.
+- **Link and image helpers** live in `src/utils/link.js` and `@apostrophecms/apostrophe-astro/lib/attachment.js` — use these instead of navigating raw CMS data manually.
 
-For general Astro documentation and patterns, see the [Astro documentation](https://docs.astro.build/).
-
-For details on the ApostropheCMS + Astro integration, see the [`apostrophe-astro` package documentation](https://github.com/apostrophecms/apostrophe-astro).
+For general Astro patterns, see the [Astro documentation](https://docs.astro.build/). For the CMS integration, see the [`apostrophe-astro` package](https://github.com/apostrophecms/apostrophe-astro).

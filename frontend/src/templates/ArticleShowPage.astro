@@ -1,5 +1,8 @@
 ---
 import AposArea from "@apostrophecms/apostrophe-astro/components/AposArea.astro";
+// Use these attachment helpers for all image rendering — do not navigate
+// article._image[0].attachment manually. They handle URL construction, srcset
+// generation, and intrinsic dimensions consistently.
 import {
   getAttachmentUrl,
   getAttachmentSrcset,
@@ -11,6 +14,8 @@ import Breadcrumbs from "../components/Breadcrumbs.astro";
 const { page, piece } = Astro.props.aposData;
 const article = piece;
 
+// Fields prefixed with _ are relationship fields populated by Apostrophe at request
+// time. They are always returned as arrays, even when max: 1 — use [0] to get the item.
 const imageObj = article?._image?.[0];
 const url = imageObj ? getAttachmentUrl(imageObj, { size: "full" }) : null;
 const srcset = imageObj ? getAttachmentSrcset(imageObj) : null;

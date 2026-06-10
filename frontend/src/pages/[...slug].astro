@@ -18,6 +18,10 @@ export async function getStaticPaths() {
   });
 }
 
+// aposPageFetch fetches the full page payload from the ApostropheCMS backend for the
+// current URL. It returns an object with: `page` (the page document), `piece` (set on
+// piece-show routes), `global` (global config), and flags like `redirect` and `notFound`.
+// Downstream templates receive this object as `Astro.props.aposData`.
 const aposData = await aposPageFetch(Astro.request);
 
 // Determine body class based on page type

@@ -1,4 +1,7 @@
 ---
+// Use these attachment helpers for all image rendering — do not navigate
+// widget._image[0].attachment manually. They handle URL construction, srcset
+// generation, focal point, and intrinsic dimensions consistently.
 import {
   getAttachmentUrl,
   getAttachmentSrcset,
