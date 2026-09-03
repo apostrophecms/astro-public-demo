@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "concurrently --names 'backend,frontend' --prefix-colors 'blue,green' 'npm run dev --prefix backend' 'npm run dev --prefix frontend'",
+    "dev": "concurrently --names \"backend,frontend\" --prefix-colors \"blue,green\" \"npm run dev --prefix backend\" \"npm run dev --prefix frontend\"",
     "install-all": "npm install",
     "postinstall": "npm run install-frontend && npm run install-backend && echo '\\n💡 combined npm install complete'",
     "install-frontend": "cd frontend && echo '\\n💡 running npm install in frontend/' && npm install",
