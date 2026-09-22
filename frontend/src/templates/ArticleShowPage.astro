@@ -10,9 +10,11 @@ import {
   getHeight,
 } from "@apostrophecms/apostrophe-astro/lib/attachment.js";
 import Breadcrumbs from "../components/Breadcrumbs.astro";
+import { getLocale, t } from "@app/utils/i18n.js";
 
 const { page, piece } = Astro.props.aposData;
 const article = piece;
+const locale = getLocale(Astro.url);
 
 // Fields prefixed with _ are relationship fields populated by Apostrophe at request
 // time. They are always returned as arrays, even when max: 1 — use [0] to get the item.
@@ -33,7 +35,7 @@ const height = imageObj ? getHeight(imageObj) : undefined;
     {
       article._author?.length > 0 && (
         <div class="article-detail article-author">
-          Written by{" "}
+          {t(locale, "writtenBy")}{" "}
           <a
             href={`${article._parentUrl}/author/${article._author?.[0]?.slug || ""}`}
           >

@@ -3,8 +3,10 @@ import AposArea from "@apostrophecms/apostrophe-astro/components/AposArea.astro"
 import { buildPageUrl } from "@apostrophecms/apostrophe-astro/helpers";
 import Breadcrumbs from "../components/Breadcrumbs.astro";
 import ArticleExcerpt from "../components/ArticleExcerpt.astro";
+import { getLocale, t } from "@app/utils/i18n.js";
 
 const aposData = Astro.props.aposData;
+const locale = getLocale(Astro.url);
 const {
   page,
   pieces = [],
@@ -71,7 +73,7 @@ function buildUrl(pageNum) {
               href={page._url}
               class={!categoryChoices.some((c) => c.active) ? "active" : ""}
             >
-              All Articles
+              {t(locale, "allArticles")}
             </a>
           </li>
           {categoryChoices.map((choice) => (

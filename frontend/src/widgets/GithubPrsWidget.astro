@@ -1,9 +1,9 @@
 ---
 import dayjs from 'dayjs';
+import { getLocale, t } from '@app/utils/i18n.js';
 
 const { widget } = Astro.props;
-
-const capitalize = (str) => str ? str.charAt(0).toUpperCase() + str.slice(1) : '';
+const locale = getLocale(Astro.url);
 
 // Fetch PRs directly from GitHub API
 const repo = widget.repo || 'apostrophecms/apostrophe';
@@ -37,7 +37,10 @@ try {
 
 <section class="widget gh-pr-widget">
   <h3 class="gh-pr-widget__title">
-    {capitalize(widget.state)} PRs for {widget.repo}
+    {t(locale, "ghPrsForRepo", {
+      state: t(locale, widget.state === "closed" ? "closed" : "open"),
+      repo: widget.repo,
+    })}
   </h3>
   {!response ? (
     <p>Something isn't right :(</p>

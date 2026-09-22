@@ -10,8 +10,10 @@ import {
   getHeight,
 } from "@apostrophecms/apostrophe-astro/lib/attachment.js";
 import dayjs from "dayjs";
+import { getLocale, t } from "@app/utils/i18n.js";
 
 const { article, categoryUrls = {} } = Astro.props;
+const locale = getLocale(Astro.url);
 
 // Fields prefixed with _ are relationship fields populated by Apostrophe at request
 // time. They are always returned as arrays, even when max: 1 — use [0] to get the item.
@@ -73,7 +75,7 @@ if (article?.blurb && !article.blurb.options) {
     {
       article._author?.length > 0 && (
         <div class="article-detail article-author">
-          Written by {article._author[0].title}
+          {t(locale, "writtenBy")} {article._author[0].title}
         </div>
       )
     }
