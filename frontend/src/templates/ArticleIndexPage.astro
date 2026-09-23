@@ -1,23 +1,32 @@
 ---
-import AposArea from '@apostrophecms/apostrophe-astro/components/AposArea.astro';
-import setParameter from '@apostrophecms/apostrophe-astro/lib/aposSetQueryParameter.js';
-import Breadcrumbs from '../components/Breadcrumbs.astro';
-import ArticleExcerpt from '../components/ArticleExcerpt.astro';
+import AposArea from "@apostrophecms/apostrophe-astro/components/AposArea.astro";
+import { buildPageUrl } from "@apostrophecms/apostrophe-astro/helpers";
+import Breadcrumbs from "../components/Breadcrumbs.astro";
+import ArticleExcerpt from "../components/ArticleExcerpt.astro";
 
+const aposData = Astro.props.aposData;
 const {
   page,
   pieces = [],
-  _categories,
-  query,
+  filters = [],
   currentPage = 1,
   totalPages = 1,
-  url: pageUrl
-} = Astro.props.aposData;
+} = aposData;
+
+const categoryFilter = filters.find((f) => f.name === "categories");
+const categoryChoices = categoryFilter?.choices || [];
+
+// Build a lookup map so ArticleExcerpt can link category chips
+// to the correct filter URL.
+const categoryUrls = {};
+for (const choice of categoryChoices) {
+  categoryUrls[choice.value] = choice._url;
+}
 
 const pagerOptions = {
   page: currentPage,
   total: totalPages,
-  shown: 5
+  shown: 5,
 };
 
 function getPageRange(options) {
@@ -45,7 +54,7 @@ const showHeadGap = currentPage > 3;
 const showTailGap = currentPage < totalPages - 2;
 
 function buildUrl(pageNum) {
-  return setParameter(new URL(pageUrl, Astro.url), 'page', pageNum);
+  return buildPageUrl(aposData, pageNum);
 }
 ---
 
@@ -54,24 +63,27 @@ function buildUrl(pageNum) {
 <div class="article-title-wrapper">
   <div class="layout">
     <h1 class="page-title">{page.title}</h1>
-    {_categories?.length > 0 && (
-      <ul class="article-topic-filters">
-        <li>
-          <a
-            href="?"
-            class={!query?.categories ? 'active' : ''}
-          >All Articles</a>
-        </li>
-        {_categories.map((category) => (
+    {
+      categoryChoices.length > 0 && (
+        <ul class="article-topic-filters">
           <li>
             <a
-              href={`?categories=${category.slug}`}
-              class={query?.categories === category.slug ? 'active' : ''}
-            >{category.title}</a>
+              href={page._url}
+              class={!categoryChoices.some((c) => c.active) ? "active" : ""}
+            >
+              All Articles
+            </a>
           </li>
-        ))}
-      </ul>
-    )}
+          {categoryChoices.map((choice) => (
+            <li>
+              <a href={choice._url} class={choice.active ? "active" : ""}>
+                {choice.label}
+              </a>
+            </li>
+          ))}
+        </ul>
+      )
+    }
   </div>
 </div>
 
@@ -83,51 +95,61 @@ function buildUrl(pageNum) {
       </header>
 
       {/* First two articles with featured/horizontal treatment */}
-      <div class="article-excerpts article-excerpts--display-horizontal article-excerpts--display-featured">
-        {pieces.slice(0, 2).map((article) => (
-          <ArticleExcerpt article={article} />
-        ))}
+      <div
+        class="article-excerpts article-excerpts--display-horizontal article-excerpts--display-featured"
+      >
+        {
+          pieces
+            .slice(0, 2)
+            .map((article) => (
+              <ArticleExcerpt article={article} categoryUrls={categoryUrls} />
+            ))
+        }
       </div>
 
       {/* Remaining articles in grid */}
       <div class="article-excerpts article-excerpts--display-grid">
-        {pieces.slice(2).map((article) => (
-          <ArticleExcerpt article={article} />
-        ))}
+        {
+          pieces
+            .slice(2)
+            .map((article) => (
+              <ArticleExcerpt article={article} categoryUrls={categoryUrls} />
+            ))
+        }
       </div>
 
       {/* Pagination */}
-      {(currentPage > 1 || totalPages > 1) && (
-        <div>
-          <span class={`${currentPage === 1 ? 'is-active' : ''} is-first`}>
-            {currentPage !== 1 ? (
-              <a href={buildUrl(1)}>1</a>
-            ) : (
-              1
+      {
+        (currentPage > 1 || totalPages > 1) && (
+          <div>
+            <span class={`${currentPage === 1 ? "is-active" : ""} is-first`}>
+              {currentPage !== 1 ? <a href={buildUrl(1)}>1</a> : 1}
+            </span>
+            {showHeadGap && <span>&hellip;</span>}
+            {pageRange.map((pageNum) => (
+              <span class={currentPage === pageNum ? "is-active" : ""}>
+                {currentPage !== pageNum ? (
+                  <a href={buildUrl(pageNum)}>{pageNum}</a>
+                ) : (
+                  pageNum
+                )}
+              </span>
+            ))}
+            {showTailGap && <span>&hellip;</span>}
+            {totalPages > 1 && (
+              <span
+                class={`${currentPage === totalPages ? "is-active" : ""} is-last`}
+              >
+                {currentPage !== totalPages ? (
+                  <a href={buildUrl(totalPages)}>{totalPages}</a>
+                ) : (
+                  totalPages
+                )}
+              </span>
             )}
-          </span>
-          {showHeadGap && <span>&hellip;</span>}
-          {pageRange.map((pageNum) => (
-            <span class={currentPage === pageNum ? 'is-active' : ''}>
-              {currentPage !== pageNum ? (
-                <a href={buildUrl(pageNum)}>{pageNum}</a>
-              ) : (
-                pageNum
-              )}
-            </span>
-          ))}
-          {showTailGap && <span>&hellip;</span>}
-          {totalPages > 1 && (
-            <span class={`${currentPage === totalPages ? 'is-active' : ''} is-last`}>
-              {currentPage !== totalPages ? (
-                <a href={buildUrl(totalPages)}>{totalPages}</a>
-              ) : (
-                totalPages
-              )}
-            </span>
-          )}
-        </div>
-      )}
+          </div>
+        )
+      }
     </section>
   </main>
 </div>

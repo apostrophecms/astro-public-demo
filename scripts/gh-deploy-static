@@ -1,0 +1,224 @@
+#!/usr/bin/env node
+
+'use strict';
+
+/**
+ * Build the Astro frontend as a static site and deploy to GitHub Pages.
+ *
+ * Prerequisites:
+ *   - The ApostropheCMS backend must be running with the right env vars
+ *     (e.g. `APOS_PREFIX=/<repo> APOS_STATIC_BASE_URL=https://<owner>.github.io npm run serve:gh` in backend/)
+ *   - Git remote 'origin' must point to a GitHub repository
+ *
+ * Usage:
+ *   ./scripts/gh-deploy-static [options]
+ *
+ * Options:
+ *   --dry-run           Build and prepare deployment without pushing to GitHub
+ *   --no-build          Skip the build step (reuse existing dist/)
+ *   --backend-url=URL   Override the backend URL (default: http://localhost:3000)
+ *   --help              Show this help message
+ */
+
+const { execSync } = require('node:child_process');
+const {
+  cpSync, rmSync, writeFileSync,
+  mkdtempSync, existsSync
+} = require('node:fs');
+const { join, resolve, relative } = require('node:path');
+const { tmpdir } = require('node:os');
+
+// --- Config ---
+const ROOT = resolve(__dirname, '..');
+const FRONTEND = join(ROOT, 'frontend');
+const DIST = join(FRONTEND, 'dist');
+const DEPLOY_BRANCH = 'gh-pages';
+const DEFAULT_BACKEND_URL = 'http://localhost:3000';
+
+// --- Args ---
+const args = process.argv.slice(2);
+const DRY_RUN = args.includes('--dry-run');
+const NO_BUILD = args.includes('--no-build');
+const BACKEND_URL = (() => {
+  const arg = args.find(a => a.startsWith('--backend-url='));
+  return arg ? arg.split('=')[1] : DEFAULT_BACKEND_URL;
+})();
+
+if (args.includes('--help') || args.includes('-h')) {
+  const rel = relative(process.cwd(), __filename) || 'scripts/gh-deploy-static';
+  console.log(`
+Build and deploy the static Astro frontend to GitHub Pages.
+
+Usage:
+  ./${rel} [options]
+
+Options:
+  --dry-run           Build and prepare without pushing to GitHub
+  --no-build          Skip the build step (reuse existing frontend/dist/)
+  --backend-url=URL   Override the backend URL (default: ${DEFAULT_BACKEND_URL})
+  --help              Show this help message
+
+Prerequisites:
+  The ApostropheCMS backend must be running before building.
+  Start it with the right env vars (the script will tell you the exact command):
+
+    cd backend
+    APOS_PREFIX=/<repo> APOS_STATIC_BASE_URL=https://<owner>.github.io npm run serve:gh
+`);
+  process.exit(0);
+}
+
+// --- Helpers ---
+function run(cmd, opts = {}) {
+  console.log(`  $ ${cmd}`);
+  execSync(cmd, { stdio: 'inherit', cwd: ROOT, ...opts });
+}
+
+function runQuiet(cmd, opts = {}) {
+  return execSync(cmd, { encoding: 'utf-8', cwd: ROOT, ...opts }).trim();
+}
+
+function step(marker, msg) {
+  console.log(`\n[${marker}] ${msg}\n`);
+}
+
+// --- Main ---
+async function main() {
+  // Detect repo info from git remote
+  const remoteUrl = runQuiet('git remote get-url origin');
+  const repoMatch = remoteUrl.match(/github\.com[:/]([^/]+)\/([^/.]+)/);
+  if (!repoMatch) {
+    console.error('Error: Could not parse GitHub repository from remote:', remoteUrl);
+    process.exit(1);
+  }
+
+  const [, owner, repo] = repoMatch;
+  const prefix = `/${repo}`;
+  const siteOrigin = `https://${owner}.github.io`;
+  const siteUrl = `${siteOrigin}${prefix}/`;
+
+  console.log('');
+  console.log(`  Repository:  ${owner}/${repo}`);
+  console.log(`  Prefix:      ${prefix}`);
+  console.log(`  Site URL:    ${siteUrl}`);
+  console.log(`  Deploy to:   branch '${DEPLOY_BRANCH}'`);
+  console.log(`  Env:         APOS_PREFIX=${prefix}`);
+  console.log(`  Env:         APOS_STATIC_BASE_URL=${siteOrigin}`);
+  if (DRY_RUN) console.log('  Mode:        DRY RUN (no push)');
+  if (NO_BUILD) console.log('  Mode:        SKIP BUILD (reuse dist/)');
+  console.log('');
+
+  if (!NO_BUILD) {
+    // Check backend is running
+    step('check', 'Checking backend availability...');
+    try {
+      execSync(
+        `curl -sf -o /dev/null --head --max-time 5 ${BACKEND_URL}${prefix}/`,
+        { timeout: 10000, stdio: 'pipe' }
+      );
+      console.log(`  Backend is running at ${BACKEND_URL}`);
+    } catch {
+      console.error(`  Error: Backend is not responding at ${BACKEND_URL}`);
+      console.error(`  Start it with: cd backend && APOS_PREFIX=${prefix} APOS_STATIC_BASE_URL=${siteOrigin} npm run serve:gh`);
+      process.exit(1);
+    }
+
+    // Build static site
+    step('build', 'Building static site...');
+    if (existsSync(DIST)) {
+      rmSync(DIST, { recursive: true, force: true });
+    }
+    run('npm run build', {
+      cwd: FRONTEND,
+      env: {
+        ...process.env,
+        NODE_ENV: 'production',
+        APOS_PREFIX: prefix,
+        APOS_BUILD: 'static',
+        APOS_EXTERNAL_FRONT_KEY: process.env.APOS_EXTERNAL_FRONT_KEY || 'dev'
+      }
+    });
+  }
+
+  if (!existsSync(DIST)) {
+    console.error('\n  Error: Build output not found at:', DIST);
+    console.error('  Run without --no-build or build manually first.');
+    process.exit(1);
+  }
+
+  // Prepare deployment
+  step('deploy', 'Preparing deployment...');
+  const tmp = mkdtempSync(join(tmpdir(), 'gh-pages-'));
+
+  try {
+    // Get git user info
+    let userName, userEmail;
+    try {
+      userName = runQuiet('git config user.name');
+      userEmail = runQuiet('git config user.email');
+    } catch {
+      userName = 'Deploy Script';
+      userEmail = 'deploy@localhost';
+    }
+
+    // Init temp git repo
+    run('git init -b deploy', { cwd: tmp });
+    run(`git config user.name "${userName}"`, { cwd: tmp });
+    run(`git config user.email "${userEmail}"`, { cwd: tmp });
+
+    // Copy build output into temp repo
+    cpSync(DIST, tmp, { recursive: true });
+
+    // Add .nojekyll to skip Jekyll processing on GitHub Pages
+    writeFileSync(join(tmp, '.nojekyll'), '');
+
+    // Commit
+    run('git add -A', { cwd: tmp });
+
+    const status = runQuiet('git status --porcelain', { cwd: tmp });
+    if (!status) {
+      console.log('\n  No changes to deploy.\n');
+      process.exit(0);
+    }
+
+    const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+    run(
+      `git commit -m "Deploy static site (${timestamp})"`,
+      { cwd: tmp }
+    );
+
+    if (DRY_RUN) {
+      step('done', 'Dry run complete!');
+      console.log(`  Site URL:       ${siteUrl}`);
+      console.log(`  Build output:   ${DIST}`);
+      console.log(`  Prepared in:    ${tmp}`);
+      console.log('  (temp directory preserved for inspection)\n');
+      return;
+    }
+
+    // Push to gh-pages branch
+    step('push', `Pushing to '${DEPLOY_BRANCH}' branch...`);
+    run(
+      `git push --force ${remoteUrl} HEAD:refs/heads/${DEPLOY_BRANCH}`,
+      { cwd: tmp }
+    );
+
+    step('done', 'Deployment complete!');
+    console.log(`  Site URL: ${siteUrl}`);
+    console.log('');
+    console.log('  If this is your first deploy, enable GitHub Pages:');
+    console.log(`  - https://github.com/${owner}/${repo}/settings/pages`);
+    console.log(`  - Source: "Deploy from a branch"`);
+    console.log(`  - Branch: "${DEPLOY_BRANCH}" / Folder: "/ (root)"`);
+    console.log('');
+  } finally {
+    if (!DRY_RUN) {
+      rmSync(tmp, { recursive: true, force: true });
+    }
+  }
+}
+
+main().catch((err) => {
+  console.error('\nDeployment failed:', err.message);
+  process.exit(1);
+});

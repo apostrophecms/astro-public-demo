@@ -23,6 +23,7 @@ This hybrid approach combines:
 
 **Widgets:**
 - Core content widgets (rich text, image, video, file)
+- Layout widgets (layout, layout column) for structured page composition
 - Marketing components (hero, button, card, price card)
 - Article widget for content relationships
 - GitHub PRs widget demonstrating external API integration
@@ -76,6 +77,99 @@ cd frontend && npm run dev
 ```
 
 Visit `http://localhost:4321` to see the site.
+
+### Static Build
+
+Generate a fully static version of the site served from the root path (`/`).
+
+**1. Start the backend:**
+
+```bash
+cd backend
+npm run dev
+```
+
+**2. Build the static frontend** (in a second terminal):
+
+```bash
+cd frontend
+npm run build:static
+```
+
+**3. Preview the build:**
+
+```bash
+cd frontend
+npm run preview:static
+```
+
+Open `http://static.localhost:4000` to see the static version.
+
+For production builds:
+
+```bash
+# Terminal 1 - Backend
+cd backend
+export NODE_ENV=production
+APOS_EXTERNAL_FRONT_KEY=dev npm run serve
+
+# Terminal 2 - Frontend
+cd frontend
+export NODE_ENV=production
+npm run build:static
+```
+
+> Note: You can change the `APOS_EXTERNAL_FRONT_KEY` value for the `build:static` command.
+
+### Static Build (GitHub Pages)
+
+You can generate a fully static site and deploy it to GitHub Pages (or any static host that serves from a sub-path).
+
+**1. Start the backend** with the prefix and base URL for your GitHub Pages site:
+
+```bash
+cd backend
+export NODE_ENV=production
+export APOS_PREFIX=/<your-repo>
+export APOS_STATIC_BASE_URL=https://<your-github-user>.github.io
+npm run serve:gh
+```
+
+**2. Build the static frontend** (in a second terminal):
+
+```bash
+cd frontend
+export NODE_ENV=production
+export APOS_PREFIX=/<your-repo>
+npm run build:gh
+```
+
+The output is in `frontend/dist/` and ready to be served from `/<your-repo>/`.
+
+For this repository, the commands are:
+
+```bash
+# Terminal 1 - Backend
+cd backend
+export NODE_ENV=production
+export APOS_PREFIX=/astro-public-demo
+export APOS_STATIC_BASE_URL=https://apostrophecms.github.io
+npm run serve:gh
+
+# Terminal 2 - Frontend
+cd frontend
+export NODE_ENV=production
+export APOS_PREFIX=/astro-public-demo
+npm run build:gh
+```
+
+**Alternatively, use the deploy script** to build and push to GitHub Pages in one step (the backend must be running as described above):
+
+```bash
+./scripts/gh-deploy-static
+```
+
+The script auto-detects `<your-github-user>` and `<your-repo>` from the `origin` remote, starts the build, and pushes to the `gh-pages` branch. Run `./scripts/gh-deploy-static --help` for options like `--dry-run` and `--no-build`.
 
 ### Create an Admin User
 
@@ -164,12 +258,40 @@ Deploy the backend and frontend separately:
 | `APOS_EXTERNAL_FRONT_KEY` | Yes | Shared secret between the Astro frontend and ApostropheCMS backend |
 | `APOS_ALLOWED_DOMAINS` | Yes | Comma-separated list of backend hostname patterns Astro is allowed to proxy to. Wildcards are supported (e.g. `mysite.apos.dev`, `**.example.com`, or `api.example.com,**.cdn.example.com`). Defaults to `**.apos.dev`. |
 
-## Production-Ready Starter Kits
+**Important: Production Security Configuration**
 
-This demo focuses on core integration patterns. For production projects with complete design systems and advanced features, check out:
+Astro requires an `allowedDomains` entry in `astro.config.mjs` for certain
+ApostropheCMS operations — including file uploads and logout — to work correctly
+in production. Without it, those operations will silently fail with a 403.
+This does **not** affect local development.
 
-- **[Apollo Starter Kit](https://github.com/apostrophecms/starter-kit-astro-apollo)** - Production-ready with Bulma design system
-- **[Astro Essentials](https://github.com/apostrophecms/starter-kit-astro-essentials)** - Minimal foundation for custom designs
+Add your ApostropheCMS backend domain to the `security` block in
+`frontend/astro.config.mjs`:
+
+```js
+export default defineConfig({
+  // ... other config
+  security: {
+    allowedDomains: [
+      {
+        hostname: 'your-apos-backend.com',
+        protocol: 'https'
+      }
+    ]
+  }
+});
+```
+
+This tells Astro to trust `X-Forwarded-Host` headers from your backend, which
+it uses to construct the request origin for CSRF validation. Setting
+`checkOrigin: false` alone is **not** sufficient.
+
+> Requires `astro@5.14.2` or later. Wildcard hostnames (e.g.
+> `*.yourdomain.com`) are supported if your backend and frontend share a domain.
+
+## Production-Ready Starter Kit
+
+This demo focuses on core integration patterns. When you're ready to build a production project, the **[Astro Essentials Starter Kit](https://github.com/apostrophecms/starter-kit-astro-essentials)** provides a minimal foundation you can build your own design system on top of.
 
 Need enterprise features like advanced permissions, automated translation, or document versioning? [Contact us](https://apostrophecms.com/contact-us) to learn about ApostropheCMS Pro.
 

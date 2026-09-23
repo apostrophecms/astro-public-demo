@@ -1,3 +1,5 @@
+// Widget registry — maps backend module names to Astro components.
+// Keys MUST match the backend module name exactly (e.g. '@apostrophecms/rich-text', 'hero').
 import RichTextWidget from './RichTextWidget.astro';
 import ImageWidget from './ImageWidget.astro';
 import VideoWidget from './VideoWidget.astro';
@@ -21,8 +23,8 @@ const widgetComponents = {
   'button': ButtonWidget,
   'hero': HeroWidget,
   'card': CardWidget,
-  'card-title-rt': RichTextWidget,
-  'card-content-rt': RichTextWidget,
+  'card-title-rt': RichTextWidget,   // intentional: reuses RichTextWidget as an inline rich-text variant
+  'card-content-rt': RichTextWidget, // intentional: same pattern as above
   'price-card': PriceCardWidget,
   'article': ArticleWidget,
   'github-prs': GithubPrsWidget
