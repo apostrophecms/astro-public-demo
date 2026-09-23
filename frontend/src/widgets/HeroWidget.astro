@@ -1,6 +1,12 @@
 ---
-import AposArea from '@apostrophecms/apostrophe-astro/components/AposArea.astro';
-import { getLinkPath, opensInNewTab } from '../utils/link.js';
+// AposArea renders a CMS-editable sequence of widgets defined by an area field in the
+// backend schema. Pass the area object from the widget/page data directly — do not map
+// its items manually.
+import AposArea from "@apostrophecms/apostrophe-astro/components/AposArea.astro";
+// getLinkPath resolves a link object (page, file, or custom URL) to a URL string.
+// opensInNewTab returns true when linkTarget is ['_blank']. Always use these instead
+// of navigating _linkPage[0]._url directly.
+import { getLinkPath, opensInNewTab } from "@app/utils/link.js";
 
 const { widget } = Astro.props;
 ---
@@ -9,20 +15,24 @@ const { widget } = Astro.props;
   <div class="hero-widget__content">
     <AposArea area={widget.content} />
   </div>
-  {widget.links?.length > 0 && (
-    <div class="hero-widget__buttons">
-      {widget.links.map((item) => {
-        const path = getLinkPath(item);
-        const isBlank = opensInNewTab(item.linkTarget);
-        const linkClass = `link button ${item.style || ''}`;
-        return (
-          <a
-            class={linkClass}
-            href={path}
-            target={isBlank ? '_blank' : undefined}
-          >{item.linkText}</a>
-        );
-      })}
-    </div>
-  )}
+  {
+    widget.links?.length > 0 && (
+      <div class="hero-widget__buttons">
+        {widget.links.map((item) => {
+          const path = getLinkPath(item);
+          const isBlank = opensInNewTab(item.linkTarget);
+          const linkClass = `link button ${item.style || ""}`;
+          return (
+            <a
+              class={linkClass}
+              href={path}
+              target={isBlank ? "_blank" : undefined}
+            >
+              {item.linkText}
+            </a>
+          );
+        })}
+      </div>
+    )
+  }
 </div>

@@ -1,11 +1,11 @@
 ---
-import { getLinkPath, opensInNewTab } from '../utils/link.js';
+import { getLinkPath, opensInNewTab } from "@app/utils/link.js";
 
 const { widget } = Astro.props;
 const path = getLinkPath(widget);
 const isBlank = opensInNewTab(widget.linkTarget);
 
-let classes = 'widget button-widget';
+let classes = "widget button-widget";
 if (widget.block) {
   classes += ` button-widget--block-${widget.block}`;
 }
@@ -16,10 +16,10 @@ if (widget.alignment) {
 
 <div class={classes} id={widget._id}>
   <a
-    class="link button"
+    class={`link button ${widget.style || ""}`}
     href={path}
-    target={isBlank ? '_blank' : undefined}
-  >{widget.linkText}</a>
+    target={isBlank ? "_blank" : undefined}>{widget.linkText}</a
+  >
 </div>
 
 <style define:vars={{ hoverColor: widget.color }}>

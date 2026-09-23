@@ -1,3 +1,6 @@
+// Canonical link field set. Spread with `...linkConfig.link` into any schema that needs
+// a link — do not copy these fields manually. The frontend's getLinkPath() and
+// opensInNewTab() helpers in frontend/src/utils/link.js depend on this exact field shape.
 const link = {
   linkText: {
     label: 'project:linkText',
@@ -21,6 +24,9 @@ const link = {
       }
     ]
   },
+  // _linkPage and _linkFile use the _ prefix: they are relationship fields populated
+  // at request time and returned as arrays. The `if:` condition shows them only when
+  // the matching linkType is selected — keeping the editing UI uncluttered.
   _linkPage: {
     label: 'project:pageToLink',
     type: 'relationship',

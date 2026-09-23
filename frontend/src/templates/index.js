@@ -1,3 +1,6 @@
+// Template registry — maps backend page type names to Astro components.
+// Keys MUST match the backend module name exactly (e.g. '@apostrophecms/home-page', 'default-page').
+// Piece show/index pages use the 'module-name:show' / 'module-name:index' pattern.
 import HomePage from './HomePage.astro';
 import DefaultPage from './DefaultPage.astro';
 import ArticleIndexPage from './ArticleIndexPage.astro';
