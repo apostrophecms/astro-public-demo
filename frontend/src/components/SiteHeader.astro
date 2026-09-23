@@ -6,11 +6,11 @@ import {
 } from "@apostrophecms/apostrophe-astro/lib/attachment.js";
 import LocaleSwitcher from "./LocaleSwitcher.astro";
 import { basePath } from "@app/utils/index.js";
-import { getLocale, t } from "@app/utils/i18n.js";
+import { getLocale, createTranslator } from "@app/utils/i18n.js";
 
 const { aposData } = Astro.props;
 const { page, home, global, localizations } = aposData;
-const locale = getLocale(Astro.url);
+const __t = createTranslator(getLocale(aposData));
 
 const logoAttachment = global?._siteLogo?.[0];
 const logoUrl = logoAttachment
@@ -84,7 +84,7 @@ const logoHeight = logoAttachment ? getHeight(logoAttachment) : 36;
         ><path d="M4 5h16"></path><path d="M4 12h16"></path><path d="M4 19h16"
         ></path></svg
       >
-      <span>{t(locale, "menu")}</span>
+      <span>{__t("menu")}</span>
     </button>
   </div>
 </header>
@@ -104,7 +104,7 @@ const logoHeight = logoAttachment ? getHeight(logoAttachment) : 36;
       class="lucide lucide-x-icon lucide-x"
       ><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg
     >
-    <span>{t(locale, "closeMenu")}</span>
+    <span>{__t("closeMenu")}</span>
   </button>
   <nav id="mobile-nav" class="mobile-nav__nav" role="navigation">
     <ul>

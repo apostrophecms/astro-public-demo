@@ -2,7 +2,7 @@
 import ArticleExcerpt from "../components/ArticleExcerpt.astro";
 import { aposFetch } from "@apostrophecms/apostrophe-astro/helpers";
 
-const { widget } = Astro.props;
+const { widget, locale } = Astro.props;
 
 const limit = widget.limit || 5;
 const display = widget.display || "";
@@ -33,7 +33,9 @@ try {
 >
   {
     articles.length > 0 ? (
-      articles.map((article) => <ArticleExcerpt article={article} />)
+      articles.map((article) => (
+        <ArticleExcerpt article={article} locale={locale} />
+      ))
     ) : (
       <p>No articles available</p>
     )

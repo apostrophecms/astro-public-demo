@@ -1,9 +1,9 @@
 ---
 import dayjs from 'dayjs';
-import { getLocale, t } from '@app/utils/i18n.js';
+import { createTranslator } from '@app/utils/i18n.js';
 
-const { widget } = Astro.props;
-const locale = getLocale(Astro.url);
+const { widget, locale = 'en' } = Astro.props;
+const __t = createTranslator(locale);
 
 // Fetch PRs directly from GitHub API
 const repo = widget.repo || 'apostrophecms/apostrophe';
@@ -37,8 +37,8 @@ try {
 
 <section class="widget gh-pr-widget">
   <h3 class="gh-pr-widget__title">
-    {t(locale, "ghPrsForRepo", {
-      state: t(locale, widget.state === "closed" ? "closed" : "open"),
+    {__t("ghPrsForRepo", {
+      state: __t(widget.state === "closed" ? "closed" : "open"),
       repo: widget.repo,
     })}
   </h3>
