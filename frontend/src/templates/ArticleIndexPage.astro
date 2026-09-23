@@ -3,8 +3,11 @@ import AposArea from "@apostrophecms/apostrophe-astro/components/AposArea.astro"
 import { buildPageUrl } from "@apostrophecms/apostrophe-astro/helpers";
 import Breadcrumbs from "../components/Breadcrumbs.astro";
 import ArticleExcerpt from "../components/ArticleExcerpt.astro";
+import { getLocale, createTranslator } from "@app/utils/i18n.js";
 
 const aposData = Astro.props.aposData;
+const locale = getLocale(aposData);
+const __t = createTranslator(locale);
 const {
   page,
   pieces = [],
@@ -71,7 +74,7 @@ function buildUrl(pageNum) {
               href={page._url}
               class={!categoryChoices.some((c) => c.active) ? "active" : ""}
             >
-              All Articles
+              {__t("allArticles")}
             </a>
           </li>
           {categoryChoices.map((choice) => (
@@ -91,7 +94,7 @@ function buildUrl(pageNum) {
   <main>
     <section class="article-index">
       <header class="article-intro general-content">
-        <AposArea area={page.intro} />
+        <AposArea area={page.intro} locale={locale} />
       </header>
 
       {/* First two articles with featured/horizontal treatment */}
@@ -102,7 +105,7 @@ function buildUrl(pageNum) {
           pieces
             .slice(0, 2)
             .map((article) => (
-              <ArticleExcerpt article={article} categoryUrls={categoryUrls} />
+              <ArticleExcerpt article={article} categoryUrls={categoryUrls} locale={locale} />
             ))
         }
       </div>
@@ -113,7 +116,7 @@ function buildUrl(pageNum) {
           pieces
             .slice(2)
             .map((article) => (
-              <ArticleExcerpt article={article} categoryUrls={categoryUrls} />
+              <ArticleExcerpt article={article} categoryUrls={categoryUrls} locale={locale} />
             ))
         }
       </div>

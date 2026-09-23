@@ -1,0 +1,13 @@
+{
+  "writtenBy": "Written by",
+  "allArticles": "All Articles",
+  "menu": "Menu",
+  "closeMenu": "Close",
+  "toggleDarkMode": "Toggle dark mode",
+  "footerExplore": "Explore ApostropheCMS",
+  "footerProduct": "Product",
+  "footerSocialMedia": "Social Media",
+  "open": "Open",
+  "closed": "Closed",
+  "ghPrsForRepo": "{{state}} PRs for {{repo}}"
+}

@@ -1,5 +1,9 @@
 ---
 import { basePath } from "@app/utils/index.js";
+import { getLocale, createTranslator } from "@app/utils/i18n.js";
+
+const { aposData } = Astro.props;
+const __t = createTranslator(getLocale(aposData));
 ---
 
 <footer class="footer">
@@ -76,7 +80,7 @@ import { basePath } from "@app/utils/index.js";
       </a>
     </div>
     <div class="footer__column">
-      <h4>Explore ApostropheCMS</h4>
+      <h4>{__t("footerExplore")}</h4>
       <ul>
         <li>
           <a href="http://apostrophecms.com/?utm_source=demo" target="_blank"
@@ -110,7 +114,7 @@ import { basePath } from "@app/utils/index.js";
       </ul>
     </div>
     <div class="footer__column">
-      <h4>Product</h4>
+      <h4>{__t("footerProduct")}</h4>
       <ul>
         <li>
           <a
@@ -145,7 +149,7 @@ import { basePath } from "@app/utils/index.js";
       </ul>
     </div>
     <div class="footer__column">
-      <h4>Social Media</h4>
+      <h4>{__t("footerSocialMedia")}</h4>
       <ul>
         <li>
           <a href="https://bsky.app/profile/apostrophecms.com" target="_blank"
@@ -179,14 +183,14 @@ import { basePath } from "@app/utils/index.js";
 <!-- Light/Dark mode switch -->
 <div class="mode-switch" data-mode-switch>
   <label for="light-dark-toggle">
-    <span class="sr-only">Toggle dark mode</span>
+    <span class="sr-only">{__t("toggleDarkMode")}</span>
     <input
       class="toggle-checkbox"
       type="checkbox"
       name="light-dark-toggle"
       id="light-dark-toggle"
       role="switch"
-      aria-label="Toggle dark mode"
+      aria-label={__t("toggleDarkMode")}
     />
     <div class="toggle-slot">
       <div class="sun-icon-wrapper">

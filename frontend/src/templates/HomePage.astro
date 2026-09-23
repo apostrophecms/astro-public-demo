@@ -1,9 +1,12 @@
 ---
 import AposArea from '@apostrophecms/apostrophe-astro/components/AposArea.astro';
 import Breadcrumbs from '../components/Breadcrumbs.astro';
+import { getLocale } from '@app/utils/i18n.js';
 
-const { page, global } = Astro.props.aposData;
+const aposData = Astro.props.aposData;
+const { page, global } = aposData;
 const siteTitle = global?.siteTitle || 'ApostropheCMS Demo';
+const locale = getLocale(aposData);
 ---
 
 <Breadcrumbs {page} />
@@ -17,7 +20,7 @@ const siteTitle = global?.siteTitle || 'ApostropheCMS Demo';
     <div class="home">
       <div class="content">
         <div class="general-content">
-          <AposArea area={page.main} />
+          <AposArea area={page.main} locale={locale} />
         </div>
       </div>
     </div>
