@@ -4,8 +4,11 @@
   "align": "Align",
   "apostropheCmsSite": "ApostropheCMS Site",
   "article": "Article",
-  "articleAuthor": "Author",
-  "articleAuthorColumn": "Author",
+  "author": "Author",
+  "authors": "Authors",
+  "articleAuthors": "Authors",
+  "articleAuthorsColumn": "Authors",
+  "authorName": "Name",
   "articleBlurb": "Blurb",
   "articleBlurbHelp": "A short summary",
   "articleCategories": "Article Categories",
@@ -227,5 +230,7 @@
   "textAndType": "Text and Typography",
   "textColor": "Text Color",
   "textColorHelp": "Used for text and labels",
-  "widgets": "Widgets"
+  "widgets": "Widgets",
+  "userAuthor": "Author",
+  "userAuthorHelp": "The byline credited when this user writes an article. Created automatically the first time they work on one."
 }

@@ -3,9 +3,12 @@ export default {
   options: {
     label: 'project:articleIndexPage',
     pluralLabel: 'project:articleIndexPages',
+    // Replaces blog-page's year/month/day filters. Each filter gets a
+    // `filters` entry in the page data and, with `static: true` on
+    // @apostrophecms/url, its own dispatch routes (`/categories/:value`).
     piecesFilters: [
       { name: 'categories' },
-      { name: 'author' }
+      { name: 'authors' }
     ]
   },
   fields: {
@@ -27,12 +30,5 @@ export default {
         fields: [ 'intro' ]
       }
     }
-  },
-  methods(self) {
-    return {
-      async beforeIndex(req) {
-        req.data._categories = await self.apos.category.find(req).sort({ title: 1 }).toArray();
-      }
-    };
   }
 };
