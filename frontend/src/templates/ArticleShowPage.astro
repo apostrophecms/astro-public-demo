@@ -10,8 +10,10 @@ import {
   getHeight,
 } from "@apostrophecms/apostrophe-astro/lib/attachment.js";
 import Breadcrumbs from "../components/Breadcrumbs.astro";
+import Byline from "../components/Byline.astro";
+import { getChoiceFilter } from "../utils/index.js";
 
-const { page, piece } = Astro.props.aposData;
+const { page, piece, locale } = Astro.props.aposData;
 const article = piece;
 
 // Fields prefixed with _ are relationship fields populated by Apostrophe at request
@@ -31,14 +33,16 @@ const height = imageObj ? getHeight(imageObj) : undefined;
   </div>
   <div class="article-details">
     {
-      article._author?.length > 0 && (
+      article._authors?.length > 0 && (
         <div class="article-detail article-author">
           Written by{" "}
-          <a
-            href={`${article._parentUrl}/author/${article._author?.[0]?.slug || ""}`}
-          >
-            {article._author[0].title}
-          </a>
+          <Byline
+            authors={article._authors}
+            locale={locale}
+            authorUrl={(author) =>
+              article._parentUrl + getChoiceFilter("authors", author.slug)
+            }
+          />
         </div>
       )
     }
@@ -57,7 +61,9 @@ const height = imageObj ? getHeight(imageObj) : undefined;
       <div class="inner article-topics article-topics--show">
         {article._categories.map((category) => (
           <a
-            href={`${article._parentUrl}/categories/${category.slug}`}
+            href={
+              article._parentUrl + getChoiceFilter("categories", category.slug)
+            }
             class="chip"
           >
             {category.title}

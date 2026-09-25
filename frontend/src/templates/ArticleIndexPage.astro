@@ -7,14 +7,21 @@ import ArticleExcerpt from "../components/ArticleExcerpt.astro";
 const aposData = Astro.props.aposData;
 const {
   page,
+  locale,
   pieces = [],
   filters = [],
   currentPage = 1,
   totalPages = 1,
 } = aposData;
 
+// Populated by the backend from the `piecesFilters` option in
+// backend/modules/article-page/index.js. Each choice carries its own `_url`
+// (a path, since @apostrophecms/url has `static: true`) and `active` flag.
 const categoryFilter = filters.find((f) => f.name === "categories");
 const categoryChoices = categoryFilter?.choices || [];
+
+// A category or an author may be active. Either way, "All Articles" is not.
+const hasActiveChoice = filters.some((f) => f.choices?.some((c) => c.active));
 
 // Build a lookup map so ArticleExcerpt can link category chips
 // to the correct filter URL.
@@ -69,7 +76,7 @@ function buildUrl(pageNum) {
           <li>
             <a
               href={page._url}
-              class={!categoryChoices.some((c) => c.active) ? "active" : ""}
+              class={!hasActiveChoice ? "active" : ""}
             >
               All Articles
             </a>
@@ -102,7 +109,11 @@ function buildUrl(pageNum) {
           pieces
             .slice(0, 2)
             .map((article) => (
-              <ArticleExcerpt article={article} categoryUrls={categoryUrls} />
+              <ArticleExcerpt
+                article={article}
+                categoryUrls={categoryUrls}
+                locale={locale}
+              />
             ))
         }
       </div>
@@ -113,7 +124,11 @@ function buildUrl(pageNum) {
           pieces
             .slice(2)
             .map((article) => (
-              <ArticleExcerpt article={article} categoryUrls={categoryUrls} />
+              <ArticleExcerpt
+                article={article}
+                categoryUrls={categoryUrls}
+                locale={locale}
+              />
             ))
         }
       </div>
