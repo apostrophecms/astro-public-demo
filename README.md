@@ -36,19 +36,61 @@ This hybrid approach combines:
 ## Quick Start
 
 ### Prerequisites
-- Node.js v22 or later
-- MongoDB v6.0 or later ([setup guide](https://docs.apostrophecms.org/guide/development-setup.html))
+- Node.js v24 or later
+- A database: SQLite (no server required), MongoDB, or PostgreSQL. Choose SQLite if you're unsure.
 
 ### Installation
 
-First, fork the [astro-public-demo](https://github.com/apostrophecms/astro-public-demo/) repo (give it a star while you're there).
+Create a project with the guided installer:
 
-Then:
+```bash
+npm create apostrophe@latest
+```
+
+Answer the prompts as follows. One default installs the demo without content, so check that answer carefully:
+
+1. **Project name** — anything; this becomes the project folder.
+2. **How would you like to build?** → **Apostrophe + Astro** (the default).
+3. **Choose a starting point** → **Demo**
+4. **Pre-fill with sample content?** → **Yes** (the default is No).
+5. **Choose a database** → **SQLite**, unless you already run MongoDB or PostgreSQL.
+6. **Create your admin account** — pick a username and password.
+
+The installer clones this repository, writes `.env` files for the backend and frontend, installs
+dependencies for both, imports the sample content, and creates your admin account. Then:
+
+```bash
+cd <your-project-name>
+npm run dev
+```
+
+Visit `http://localhost:4321` to see the site, and log in at `http://localhost:4321/login` with
+the admin account you just created.
+
+To install without prompts, for example in CI, pass `--kit=apostrophe-astro-demo-data`. Without
+it, unattended mode installs the demo with no sample content:
+
+```bash
+npm create apostrophe@latest -- --unattended --kit=apostrophe-astro-demo-data \
+  --project-name=my-site --password=<admin-password> --telemetry=off
+```
+
+Run `npm create apostrophe@latest -- --help` for all flags.
+
+### Working on this repository
+
+To contribute to the demo itself, fork the [astro-public-demo](https://github.com/apostrophecms/astro-public-demo/) repo (give it a star while you're there) and clone it directly. This path starts with an empty database and no sample content.
+
 ```bash
 git clone <your-repo-url>
 cd astro-public-demo
 npm run install-all
+cp backend/.env.example backend/.env
+# Edit backend/.env — set APOS_DB_URI unless MongoDB is running locally, e.g.
+# APOS_DB_URI=sqlite://./data/astro-public-demo.db
 ```
+
+Then follow [Development](#development) below, and [create an admin user](#create-an-admin-user).
 
 ### Development
 
@@ -172,6 +214,8 @@ npm run build:gh
 The script auto-detects `<your-github-user>` and `<your-repo>` from the `origin` remote, starts the build, and pushes to the `gh-pages` branch. Run `./scripts/gh-deploy-static --help` for options like `--dry-run` and `--no-build`.
 
 ### Create an Admin User
+
+Only needed if you cloned the repository directly. The guided installer creates one for you.
 
 ```bash
 cd backend
