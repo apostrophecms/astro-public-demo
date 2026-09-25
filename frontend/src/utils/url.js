@@ -45,3 +45,23 @@ export function getBase() {
 export function basePath(pathname) {
   return `${getBase()}${pathname}`;
 }
+
+/**
+ * The path to append to an index page's `_url`, or a piece's `_parentUrl`,
+ * to filter it by one choice. Mirrors `apos.url.getChoiceFilter()` on the
+ * backend, where `static: true` makes filters paths rather than query strings.
+ *
+ * Inside the article index template, prefer the `_url` of a `filters` choice.
+ *
+ * @param {string} name - The filter name, e.g. `categories`
+ * @param {string} value - The choice value, usually a slug
+ * @param {number} [page] - The page number; omitted from the path when 1
+ * @returns {string}
+ *
+ * @example
+ *   article._parentUrl + getChoiceFilter('categories', 'news')
+ *   // → '/articles/categories/news'
+ */
+export function getChoiceFilter(name, value, page = 1) {
+  return `/${encodeURIComponent(name)}/${encodeURIComponent(value)}${page > 1 ? `/page/${page}` : ''}`;
+}

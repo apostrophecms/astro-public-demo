@@ -10,8 +10,11 @@ import {
   getHeight,
 } from "@apostrophecms/apostrophe-astro/lib/attachment.js";
 import dayjs from "dayjs";
+import Byline from "./Byline.astro";
+import { getChoiceFilter } from "../utils/index.js";
 
-const { article, categoryUrls = {} } = Astro.props;
+// `locale` sets how several authors' names are joined.
+const { article, categoryUrls = {}, locale } = Astro.props;
 
 // Fields prefixed with _ are relationship fields populated by Apostrophe at request
 // time. They are always returned as arrays, even when max: 1 — use [0] to get the item.
@@ -60,7 +63,7 @@ if (article?.blurb && !article.blurb.options) {
             <a
               href={
                 categoryUrls[category.slug] ||
-                `${article._parentUrl}/categories/${category.slug}`
+                article._parentUrl + getChoiceFilter("categories", category.slug)
               }
               class="chip"
             >
@@ -71,9 +74,9 @@ if (article?.blurb && !article.blurb.options) {
       )
     }
     {
-      article._author?.length > 0 && (
+      article._authors?.length > 0 && (
         <div class="article-detail article-author">
-          Written by {article._author[0].title}
+          Written by <Byline authors={article._authors} locale={locale} />
         </div>
       )
     }

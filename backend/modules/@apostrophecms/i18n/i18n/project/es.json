@@ -4,8 +4,11 @@
   "align": "Alinear",
   "apostropheCmsSite": "Sitio ApostropheCMS",
   "article": "Artículo",
-  "articleAuthor": "Autor",
-  "articleAuthorColumn": "Autor",
+  "author": "Autor",
+  "authors": "Autores",
+  "articleAuthors": "Autores",
+  "articleAuthorsColumn": "Autores",
+  "authorName": "Nombre",
   "articleBlurb": "Resumen",
   "articleBlurbHelp": "Un resumen breve",
   "articleCategories": "Categorías de artículos",
@@ -227,5 +230,7 @@
   "textAndType": "Texto y tipografía",
   "textColor": "Color del texto",
   "textColorHelp": "Se usa para texto y etiquetas",
-  "widgets": "Widgets"
+  "widgets": "Widgets",
+  "userAuthor": "Autor",
+  "userAuthorHelp": "La firma que se acredita cuando este usuario escribe un artículo. Se crea automáticamente la primera vez que trabaja en uno."
 }
