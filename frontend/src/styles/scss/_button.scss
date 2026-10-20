@@ -48,9 +48,6 @@
   display: flex;
 }
 
-.button-widget--alignment-left { justify-content: flex-start; }
-.button-widget--alignment-center { justify-content: center; }
-.button-widget--alignment-right { justify-content: flex-end; }
 .button-widget--block-true .button {
   display: block;
   width: 100%;

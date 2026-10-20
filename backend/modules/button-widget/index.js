@@ -30,25 +30,6 @@ export default {
         type: 'boolean',
         label: 'project:fullWidth',
         def: false
-      },
-      alignment: {
-        type: 'select',
-        label: 'project:buttonAlignment',
-        def: 'left',
-        choices: [
-          {
-            label: 'project:left',
-            value: 'left'
-          },
-          {
-            label: 'project:center',
-            value: 'center'
-          },
-          {
-            label: 'project:right',
-            value: 'right'
-          }
-        ]
       }
     }
   },
@@ -105,6 +86,7 @@ export default {
       },
       alignment: {
         type: 'radio',
+        label: 'project:buttonAlignment',
         selector: '.button-widget',
         property: 'justify-content',
         def: 'flex-start',
@@ -125,5 +107,26 @@ export default {
         ]
       }
     }
+  },
+  init(self) {
+    // Alignment used to be both a select field (left/center/right) and a
+    // style (flex-start/center/flex-end). Both saved to `alignment`, so the
+    // style could receive values it doesn't understand. Only the style
+    // remains; convert old field values to style values.
+    self.apos.migration.add('button-widget-alignment-to-style', () => {
+      const values = {
+        left: 'flex-start',
+        right: 'flex-end'
+      };
+      return self.apos.migration.eachWidget({}, async (doc, widget, dotPath) => {
+        if (widget.type !== 'button' || !values[widget.alignment]) {
+          return;
+        }
+        return self.apos.doc.db.updateOne(
+          { _id: doc._id },
+          { $set: { [`${dotPath}.alignment`]: values[widget.alignment] } }
+        );
+      });
+    });
   }
 };
