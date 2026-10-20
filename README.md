@@ -36,7 +36,7 @@ This hybrid approach combines:
 ## Quick Start
 
 ### Prerequisites
-- Node.js v24 or later
+- Node.js v22.22 or later (v24 recommended)
 - A database: SQLite (no server required), MongoDB, or PostgreSQL. Choose SQLite if you're unsure.
 
 ### Installation

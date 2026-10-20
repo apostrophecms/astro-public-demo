@@ -83,6 +83,8 @@ if (aposData.notFound) {
 
   <SiteHeader {aposData} slot="beforeMain" />
 
+  {/* Each template renders its own <main>, so breadcrumbs and page titles
+      can sit outside it. Don't wrap AposTemplate in <main> here. */}
   <AposTemplate {aposData} slot="main" />
 
   <SiteFooter {aposData} slot="afterMain" />

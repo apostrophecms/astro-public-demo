@@ -1,5 +1,8 @@
 {
   "name": "public-demo",
+  "engines": {
+    "node": ">=22.22.0"
+  },
   "version": "1.0.0",
   "description": "Apostrophe Public Demo Site",
   "main": "app.js",
