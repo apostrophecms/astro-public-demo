@@ -1,4 +1,3 @@
-import dayjs from 'dayjs';
 import { fullConfig } from '../../lib/area.js';
 
 export default {
@@ -101,16 +100,6 @@ export default {
       }
     }
   },
-  components(self) {
-    return {
-      async recent(req, data) {
-        return {
-          articles: await self.find(req).limit(data.limit).sort({ createdAt: -1 }).toArray(),
-          display: data.display
-        };
-      }
-    };
-  },
   filters: {
     // The best experience comes with just the month filter
     remove: [ 'day', 'year' ]
@@ -178,8 +167,9 @@ export default {
               authorsIds.push(authorId);
             }
           }
+          const merged = new Set([ ...(doc.authorsIds || []), ...authorsIds ]);
           await self.apos.doc.db.updateOne({ _id: doc._id }, {
-            $set: { authorsIds: [ ...new Set([ ...(doc.authorsIds || []), ...authorsIds ]) ] },
+            $set: { authorsIds: [ ...merged ] },
             $unset: { authorIds: 1 }
           });
         });

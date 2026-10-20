@@ -78,9 +78,9 @@ const defaultRtConfig = {
   ]
 };
 
-// Canonical area widget configurations. Import the right one for each area's `widgets` option
-// rather than building a custom config from scratch — this keeps allowed widgets consistent
-// across page types and reduces schema drift.
+// Canonical area widget configurations. Import the right one for each area's
+// `widgets` option rather than building a custom config from scratch. This keeps
+// allowed widgets consistent across page types and reduces schema drift.
 // basicConfig: core widgets only (image, video, rich-text, layout, button, github-prs)
 // fullConfig: basicConfig + article, card, price-card
 // fullConfigExpandedGroups: same widgets as fullConfig, grouped for the picker UI
