@@ -3,11 +3,13 @@ import AposArea from "@apostrophecms/apostrophe-astro/components/AposArea.astro"
 import { buildPageUrl } from "@apostrophecms/apostrophe-astro/helpers";
 import Breadcrumbs from "../components/Breadcrumbs.astro";
 import ArticleExcerpt from "../components/ArticleExcerpt.astro";
+import { getLocale, createTranslator } from "@app/utils/i18n.js";
 
 const aposData = Astro.props.aposData;
+const locale = getLocale(aposData);
+const __t = createTranslator(locale);
 const {
   page,
-  locale,
   pieces = [],
   filters = [],
   currentPage = 1,
@@ -78,7 +80,7 @@ function buildUrl(pageNum) {
               href={page._url}
               class={!hasActiveChoice ? "active" : ""}
             >
-              All Articles
+              {__t("allArticles")}
             </a>
           </li>
           {categoryChoices.map((choice) => (
@@ -98,7 +100,7 @@ function buildUrl(pageNum) {
   <main>
     <section class="article-index">
       <header class="article-intro general-content">
-        <AposArea area={page.intro} />
+        <AposArea area={page.intro} locale={locale} />
       </header>
 
       {/* First two articles with featured/horizontal treatment */}
