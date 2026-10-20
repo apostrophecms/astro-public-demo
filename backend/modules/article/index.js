@@ -105,17 +105,6 @@ export default {
     remove: [ 'day', 'year' ]
   },
   init(self) {
-    // A temporary migration until all of our own deployments have seen this.
-    // It's harmless but we don't need to leave it in this starter kit forever
-    self.apos.migration.add('publishedDateToPublishedAt2', async () => {
-      await self.apos.doc.db.updateMany({
-        type: self.name,
-        publishedDate: { $exists: 1 },
-        publishedAt: { $exists: 0 }
-      }, {
-        $rename: { publishedDate: 'publishedAt' }
-      });
-    });
     self.apos.migration.add('article-authors-from-users', self.migrateAuthorsFromUsers);
   },
   extendRestApiRoutes(self) {
