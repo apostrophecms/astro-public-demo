@@ -27,8 +27,10 @@ const aposData = await aposPageFetch(Astro.request);
 const isHomePage = aposData.page?.type === "@apostrophecms/home-page";
 const bodyClass = isHomePage ? "home-page" : "";
 
-// Get title
-const title = aposData.piece?.title || aposData.page?.title;
+// The document's SEO title (from @apostrophecms/seo) wins over its title.
+// On a piece show page, the piece is the document.
+const doc = aposData.piece || aposData.page;
+const title = doc?.seoTitle || doc?.title;
 const siteTitle = aposData.global?.siteTitle || "ApostropheCMS Demo";
 
 if (aposData.redirect) {
@@ -40,8 +42,13 @@ if (aposData.notFound) {
 ---
 
 <AposLayout title={`${title} - ${siteTitle}`} {aposData} {bodyClass}>
+  {/*
+    The description, robots, canonical and Open Graph tags come from the
+    @apostrophecms/seo and @apostrophecms/open-graph modules. AposLayout
+    outputs them through aposData.prependHead and appendHead, so don't
+    repeat them here.
+  */}
   <Fragment slot="standardHead">
-    <meta name="description" content={aposData.page?.seoDescription} />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta charset="UTF-8" />
     <link
