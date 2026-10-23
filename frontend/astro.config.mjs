@@ -21,9 +21,13 @@ export default defineConfig({
   // URL path prefix for non-root hosting (e.g. GitHub Pages).
   // Set APOS_PREFIX=/my-repo to enable. No trailing slash.
   base: env.APOS_PREFIX || undefined,
-  security: {
-    allowedDomains,
-  },
+  // Only for SSR. Static builds have no real request headers, and Astro
+  // warns on every prerendered page if this is set.
+  ...(!isStatic && {
+    security: {
+      allowedDomains,
+    },
+  }),
   server: {
     port: env.PORT ? parseInt(env.PORT) : 4321,
     // Required for some hosting, like Heroku

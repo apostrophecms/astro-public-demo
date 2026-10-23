@@ -36,7 +36,7 @@ This hybrid approach combines:
 ## Quick Start
 
 ### Prerequisites
-- Node.js v24 or later
+- Node.js v22.22 or later (v24 recommended)
 - A database: SQLite (no server required), MongoDB, or PostgreSQL. Choose SQLite if you're unsure.
 
 ### Installation
@@ -293,13 +293,22 @@ Zero-config deployment with automatic database provisioning, SSL, and asset opti
 
 Deploy the backend and frontend separately:
 
-**Backend:** Any Node.js host with MongoDB access (see [hosting docs](https://docs.apostrophecms.org/guide/hosting.html))
+**Backend:** Any Node.js host with access to MongoDB, PostgreSQL, or a persistent disk for SQLite (see [hosting docs](https://docs.apostrophecms.org/guide/hosting.html)). `backend/Dockerfile` builds a production image that runs migrations on start. Set these environment variables:
+
+| Variable | Required | Description |
+|---|---|---|
+| `APOS_SESSION_SECRET` | Yes | A long random string used to sign login sessions. Generate one with `openssl rand -hex 32`. |
+| `APOS_EXTERNAL_FRONT_KEY` | Yes | Shared secret between the Astro frontend and ApostropheCMS backend. Must match the frontend's value. |
+| `APOS_DB_URI` | Yes | Database connection string. See `backend/.env.example` for MongoDB, PostgreSQL, and SQLite formats. |
+| `APOS_BASE_URL` | Yes | The public URL of the Astro frontend, e.g. `https://www.example.com`. |
 
 **Frontend:** Any SSR-capable host (Netlify, Vercel, Cloudflare Pages, etc.) with these environment variables set:
 
 | Variable | Required | Description |
 |---|---|---|
 | `APOS_EXTERNAL_FRONT_KEY` | Yes | Shared secret between the Astro frontend and ApostropheCMS backend |
+| `APOS_HOST` | Yes | The URL of the ApostropheCMS backend, e.g. `https://cms.example.com`. Defaults to `http://localhost:3000`. |
+| `GITHUB_TOKEN` | No | A GitHub token for the GitHub PRs widget. Without one, GitHub's unauthenticated rate limit applies. |
 | `APOS_ALLOWED_DOMAINS` | Yes | Comma-separated list of backend hostname patterns Astro is allowed to proxy to. Wildcards are supported (e.g. `mysite.apos.dev`, `**.example.com`, or `api.example.com,**.cdn.example.com`). Defaults to `**.apos.dev`. |
 
 **Important: Production Security Configuration**

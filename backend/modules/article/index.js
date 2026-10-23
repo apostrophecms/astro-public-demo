@@ -1,4 +1,3 @@
-import dayjs from 'dayjs';
 import { fullConfig } from '../../lib/area.js';
 
 export default {
@@ -101,32 +100,11 @@ export default {
       }
     }
   },
-  components(self) {
-    return {
-      async recent(req, data) {
-        return {
-          articles: await self.find(req).limit(data.limit).sort({ createdAt: -1 }).toArray(),
-          display: data.display
-        };
-      }
-    };
-  },
   filters: {
     // The best experience comes with just the month filter
     remove: [ 'day', 'year' ]
   },
   init(self) {
-    // A temporary migration until all of our own deployments have seen this.
-    // It's harmless but we don't need to leave it in this starter kit forever
-    self.apos.migration.add('publishedDateToPublishedAt2', async () => {
-      await self.apos.doc.db.updateMany({
-        type: self.name,
-        publishedDate: { $exists: 1 },
-        publishedAt: { $exists: 0 }
-      }, {
-        $rename: { publishedDate: 'publishedAt' }
-      });
-    });
     self.apos.migration.add('article-authors-from-users', self.migrateAuthorsFromUsers);
   },
   extendRestApiRoutes(self) {
@@ -178,8 +156,9 @@ export default {
               authorsIds.push(authorId);
             }
           }
+          const merged = new Set([ ...(doc.authorsIds || []), ...authorsIds ]);
           await self.apos.doc.db.updateOne({ _id: doc._id }, {
-            $set: { authorsIds: [ ...new Set([ ...(doc.authorsIds || []), ...authorsIds ]) ] },
+            $set: { authorsIds: [ ...merged ] },
             $unset: { authorIds: 1 }
           });
         });

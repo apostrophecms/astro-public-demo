@@ -1,5 +1,8 @@
 {
   "name": "public-demo",
+  "engines": {
+    "node": ">=22.22.0"
+  },
   "version": "1.0.0",
   "description": "Apostrophe Public Demo Site",
   "main": "app.js",
@@ -28,7 +31,6 @@
     "@apostrophecms/vite": "^1.2.0",
     "apostrophe": "^4.34.0",
     "cross-env": "^10.1.0",
-    "dayjs": "^1.11.23",
     "dotenv": "^18.0.8",
     "klona": "^2.0.6"
   },

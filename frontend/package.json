@@ -1,5 +1,8 @@
 {
   "name": "astro-frontend",
+  "engines": {
+    "node": ">=22.22.0"
+  },
   "type": "module",
   "version": "1.0.0",
   "scripts": {
