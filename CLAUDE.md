@@ -31,8 +31,37 @@ Fields starting with `_` are relationship fields. Apostrophe populates them at r
 ```js
 // Relationship fields are populated at request time and returned as arrays; [0] gets the first result.
 const image = widget._image?.[0];        // first image from a max:1 relationship
-const author = article._author?.[0]?.title;
+const author = article._authors?.[0]?.title;
 ```
+
+## Filter and Pagination URLs
+
+`backend/modules/@apostrophecms/url` sets `static: true`, so piece-page filters and pages are **paths**,
+not query strings: `/articles/categories/news/page/2`, not `/articles?categories=news&page=2`.
+This is also what lets the static build enumerate every listing.
+
+- Filters are declared in `piecesFilters` on `backend/modules/article-page/index.js` (`categories`,
+  `authors`). Each arrives in `aposData.filters`, with a `_url` and `active` flag per choice.
+- In the index template, link to a filter through its choice's `_url`, and build pager links with
+  `buildPageUrl()` from `@apostrophecms/apostrophe-astro/helpers`; don't build these URLs yourself.
+- Elsewhere, append `getChoiceFilter(name, value, page)` from `frontend/src/utils/url.js` to a
+  piece's `_parentUrl`. Never use `_parentSlug`: it lacks the `/fr` or `/de` locale prefix.
+- A static URL expresses one filter at a time.
+
+## Article Authors
+
+Articles credit **`author` pieces** through `_authors` (coauthors allowed), never users.
+An author is a byline and may have no user account at all.
+
+- `author` is `localized: false`: one author per person, shared by every locale.
+- A user links to at most one author through their own `_author` field, which admins can set.
+- `apos.author.ensureForUser(user)` returns that author, creating and linking a new one if the
+  user has none or theirs was archived or deleted.
+  It runs when a user starts a new article (the default `_authors`) and whenever they save one.
+- A user's display name change is copied to their author unless `syncUserName: false`. Nothing
+  else syncs, and archiving a user leaves their author untouched.
+- Render bylines with `frontend/src/components/Byline.astro`, which joins names per locale.
+- Do not add relationships to `@apostrophecms/user` for anything visitors see.
 
 ## Shared Field Utilities — Backend (`backend/lib/`)
 

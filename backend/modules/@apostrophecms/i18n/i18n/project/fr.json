@@ -4,8 +4,11 @@
   "align": "Aligner",
   "apostropheCmsSite": "Site ApostropheCMS",
   "article": "Article",
-  "articleAuthor": "Auteur",
-  "articleAuthorColumn": "Auteur",
+  "author": "Auteur",
+  "authors": "Auteurs",
+  "articleAuthors": "Auteurs",
+  "articleAuthorsColumn": "Auteurs",
+  "authorName": "Nom",
   "articleBlurb": "Résumé",
   "articleBlurbHelp": "Un court résumé",
   "articleCategories": "Catégories d’articles",
@@ -227,5 +230,7 @@
   "textAndType": "Texte et typographie",
   "textColor": "Couleur du texte",
   "textColorHelp": "Utilisée pour le texte et les libellés",
-  "widgets": "Widgets"
+  "widgets": "Widgets",
+  "userAuthor": "Auteur",
+  "userAuthorHelp": "La signature créditée lorsque cet utilisateur écrit un article. Créée automatiquement la première fois qu’il travaille sur un article."
 }

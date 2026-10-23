@@ -76,6 +76,9 @@ apostrophe({
     // A piece type for categorizing articles
     'article-category': {},
 
+    // Bylines for articles, optionally linked to a user
+    author: {},
+
     // Import and export content
     '@apostrophecms/import-export': {}
   }
