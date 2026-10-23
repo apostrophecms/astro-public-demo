@@ -14,7 +14,7 @@ import Byline from "./Byline.astro";
 import { getChoiceFilter } from "../utils/index.js";
 import { createTranslator } from "@app/utils/i18n.js";
 
-// `locale` sets the UI language and how several authors' names are joined.
+// `locale` selects the translated strings and how several authors' names are joined.
 const { article, categoryUrls = {}, locale = "en" } = Astro.props;
 const __t = createTranslator(locale);
 
