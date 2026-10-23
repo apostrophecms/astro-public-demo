@@ -1,0 +1,13 @@
+{
+  "writtenBy": "Verfasst von",
+  "allArticles": "Alle Artikel",
+  "menu": "Menü",
+  "closeMenu": "Schließen",
+  "toggleDarkMode": "Dunkelmodus umschalten",
+  "footerExplore": "ApostropheCMS entdecken",
+  "footerProduct": "Produkt",
+  "footerSocialMedia": "Soziale Medien",
+  "open": "Offen",
+  "closed": "Geschlossen",
+  "ghPrsForRepo": "{{state}} PRs für {{repo}}"
+}

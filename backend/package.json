@@ -20,16 +20,16 @@
   },
   "dependencies": {
     "@apostrophecms/blog": "^1.0.6",
-    "@apostrophecms/favicon": "^1.1.3",
-    "@apostrophecms/import-export": "^3.6.0",
+    "@apostrophecms/favicon": "^1.1.4",
+    "@apostrophecms/import-export": "^3.7.1",
     "@apostrophecms/open-graph": "^1.2.3",
-    "@apostrophecms/seo": "^1.2.3",
-    "@apostrophecms/sitemap": "^1.2.0",
-    "@apostrophecms/vite": "^1.1.0",
-    "apostrophe": "^4.24.1",
+    "@apostrophecms/seo": "^1.7.1",
+    "@apostrophecms/sitemap": "^1.5.1",
+    "@apostrophecms/vite": "^1.2.0",
+    "apostrophe": "^4.34.0",
     "cross-env": "^10.1.0",
-    "dayjs": "^1.11.20",
-    "dotenv": "^17.4.2",
+    "dayjs": "^1.11.23",
+    "dotenv": "^18.0.8",
     "klona": "^2.0.6"
   },
   "author": "Apostrophe Technologies, Inc",
@@ -58,9 +58,8 @@
     "ext": "json, js, html, scss, vue"
   },
   "devDependencies": {
-    "eslint": "^7.32.0",
-    "eslint-config-apostrophe": "^3.4.2",
-    "eslint-plugin-node": "^11.1.0",
+    "eslint": "^9.39.5",
+    "eslint-config-apostrophe": "^6.1.0",
     "nodemon": "^3.1.14"
   },
   "allowScripts": {
