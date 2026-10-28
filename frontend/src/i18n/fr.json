@@ -9,5 +9,8 @@
   "footerSocialMedia": "Réseaux sociaux",
   "open": "Ouvert",
   "closed": "Fermé",
-  "ghPrsForRepo": "PRs {{state}} pour {{repo}}"
+  "ghPrsForRepo": "PRs {{state}} pour {{repo}}",
+  "prOpenedOn": "Ouverte le {{date}}",
+  "prNumber": "Numéro {{number}}",
+  "prsUnavailable": "Les pull requests sont indisponibles pour le moment."
 }
