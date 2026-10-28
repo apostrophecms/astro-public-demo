@@ -9,5 +9,6 @@
   "footerSocialMedia": "Soziale Medien",
   "open": "Offen",
   "closed": "Geschlossen",
-  "ghPrsForRepo": "{{state}} PRs für {{repo}}"
+  "ghPrsForRepo": "{{state}} PRs für {{repo}}",
+  "noArticles": "Es gibt noch keine Artikel. Versuchen Sie, einen hinzuzufügen."
 }
