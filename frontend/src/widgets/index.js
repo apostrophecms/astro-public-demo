@@ -1,5 +1,9 @@
-// Widget registry — maps backend module names to Astro components.
-// Keys MUST match the backend module name exactly (e.g. '@apostrophecms/rich-text', 'hero').
+// Widget registry — maps widget types to Astro components.
+// Keys MUST be the widget type: the backend module name without the `-widget`
+// suffix (e.g. '@apostrophecms/rich-text-widget' -> '@apostrophecms/rich-text',
+// 'hero-widget' -> 'hero').
+// A wrong or missing key renders nothing. The only sign is a
+// "Missing widget mapping for <type>" error in the frontend server log.
 import RichTextWidget from './RichTextWidget.astro';
 import ImageWidget from './ImageWidget.astro';
 import VideoWidget from './VideoWidget.astro';
