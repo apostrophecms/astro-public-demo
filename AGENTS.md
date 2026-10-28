@@ -39,15 +39,15 @@ Resolve data in the component's frontmatter and pass it to the element as a `dat
 
 ```astro
 ---
-// aposFetch is server-side only — never import it into client code.
-import { aposFetch } from '@apostrophecms/apostrophe-astro/helpers/server';
-const response = await aposFetch('/api/v1/...');
+const response = await Astro.locals.aposFetch('/api/v1/...');
 const payload = response.ok ? JSON.stringify(await response.json()) : '';
 ---
 <my-widget data-payload={payload}></my-widget>
 ```
 
-`VideoWidget.astro` / `VideoWidget.ts` is the reference implementation.
+Use `Astro.locals.aposFetch`, not `aposFetch` from `@apostrophecms/apostrophe-astro/helpers/server`. `Astro.locals.aposFetch` is scoped to the current request and sends the visitor's cookies, so a logged-in editor sees what their permissions allow; the helper sends no cookies, so editors get anonymous results. Keep the helper for code with no request, such as `getStaticPaths`.
+
+`ArticleWidget.astro` and `VideoWidget.astro` / `VideoWidget.ts` are the reference implementations.
 
 Never fetch from an Apostrophe API route in client-side code. Besides the freshness problem above, it breaks any [static build](https://apostrophecms.com/docs/tutorials/astro/static-builds-with-apostrophecms-astro.html) outright — the backend is not running at runtime, so the request fails on the deployed site.
 
