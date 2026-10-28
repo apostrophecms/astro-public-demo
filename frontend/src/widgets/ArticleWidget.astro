@@ -1,6 +1,5 @@
 ---
 import ArticleExcerpt from "../components/ArticleExcerpt.astro";
-import { aposFetch } from "@apostrophecms/apostrophe-astro/helpers/server";
 
 const { widget, locale } = Astro.props;
 
@@ -9,7 +8,7 @@ const display = widget.display || "";
 
 let articles = [];
 try {
-  const response = await aposFetch(
+  const response = await Astro.locals.aposFetch(
     `/api/v1/article?perPage=${limit}&sort[createdAt]=-1`,
   );
 

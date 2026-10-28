@@ -1,6 +1,4 @@
 ---
-import { aposFetch } from "@apostrophecms/apostrophe-astro/helpers/server";
-
 const { widget, options } = Astro.props;
 const placeholder = widget?.aposPlaceholder ? "true" : "";
 const url = widget?.video?.url;
@@ -14,7 +12,7 @@ if (videoUrl) {
     const oembedUrl =
       `/api/v1/@apostrophecms/oembed/query?` +
       new URLSearchParams({ url: videoUrl });
-    const response = await aposFetch(oembedUrl);
+    const response = await Astro.locals.aposFetch(oembedUrl);
     if (response.ok) {
       const result = await response.json();
       oembedData = JSON.stringify(result);
