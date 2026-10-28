@@ -1,9 +1,12 @@
 ---
-import dayjs from 'dayjs';
 import { createTranslator } from '@app/utils/i18n.js';
 
 const { widget, locale = 'en' } = Astro.props;
 const __t = createTranslator(locale);
+
+// Intl rather than a fixed English format, so /fr and /de get localized month names.
+const formatDate = (value) =>
+  new Intl.DateTimeFormat(locale, { dateStyle: 'long' }).format(new Date(value));
 
 // Fetch PRs directly from GitHub API
 const repo = widget.repo || 'apostrophecms/apostrophe';
@@ -43,7 +46,7 @@ try {
     })}
   </h3>
   {!response ? (
-    <p>Something isn't right :(</p>
+    <p>{__t("prsUnavailable")}</p>
   ) : response.message ? (
     <h3>{response.message}</h3>
   ) : (
@@ -58,8 +61,8 @@ try {
             <p class="gh-pr-widget__login">{item.user.login}</p>
           </a>
           <div class="gh-pr-widget__subdetails">
-            <p class="gh-pr-widget__subdetail">Opened on {dayjs(item.created_at).format('MMMM D YYYY')}</p>
-            <p class="gh-pr-widget__subdetail">Number {item.number}</p>
+            <p class="gh-pr-widget__subdetail">{__t("prOpenedOn", { date: formatDate(item.created_at) })}</p>
+            <p class="gh-pr-widget__subdetail">{__t("prNumber", { number: item.number })}</p>
           </div>
         </li>
       ))}
