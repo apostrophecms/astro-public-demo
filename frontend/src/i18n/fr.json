@@ -9,5 +9,6 @@
   "footerSocialMedia": "Réseaux sociaux",
   "open": "Ouvert",
   "closed": "Fermé",
-  "ghPrsForRepo": "PRs {{state}} pour {{repo}}"
+  "ghPrsForRepo": "PRs {{state}} pour {{repo}}",
+  "pagination": "Pagination"
 }
