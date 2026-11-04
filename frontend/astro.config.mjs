@@ -9,12 +9,19 @@ const env = loadEnv(process.env.NODE_ENV || 'development', process.cwd(), '');
 
 const isStatic = env.APOS_BUILD === 'static';
 
-const allowedDomains = env.APOS_ALLOWED_DOMAINS
-  ? env.APOS_ALLOWED_DOMAINS.split(',').map(hostname => ({
-      hostname: hostname.trim(),
-      protocol: 'https',
-    }))
-  : [ { hostname: '**.apos.dev', protocol: 'https' } ];
+// Public hostnames the site is served from, e.g. "www.example.com" (treated as
+// https) or a full origin such as "http://staging.example.com:4321". Astro only
+// trusts Host and X-Forwarded-* headers that match one of these, and otherwise
+// rejects logout and uploads as cross-site on some deployments. Defaults to
+// ApostropheCMS hosting. Read at build time, so set it where `npm run build` runs.
+const allowedDomains = (env.APOS_ALLOWED_DOMAINS || '**.apos.dev')
+  .split(',')
+  .map(entry => entry.trim())
+  .filter(Boolean)
+  .map(entry => {
+    const { protocol, hostname, port } = new URL(entry.includes('://') ? entry : `https://${entry}`);
+    return { protocol: protocol.replace(':', ''), hostname, ...(port && { port }) };
+  });
 
 export default defineConfig({
   output: isStatic ? 'static' : 'server',
