@@ -9,12 +9,12 @@ import {
   getWidth,
   getHeight,
 } from "@apostrophecms/apostrophe-astro/lib/attachment.js";
-import dayjs from "dayjs";
 import Byline from "./Byline.astro";
 import { getChoiceFilter } from "../utils/index.js";
 import { createTranslator } from "@app/utils/i18n.js";
 
-// `locale` selects the translated strings and how several authors' names are joined.
+// `locale` selects the translated strings, how several authors' names are joined
+// and how the date is written.
 const { article, categoryUrls = {}, locale = "en" } = Astro.props;
 const __t = createTranslator(locale);
 
@@ -83,7 +83,7 @@ if (article?.blurb && !article.blurb.options) {
       )
     }
     <div class="article-detail article-published">
-      {dayjs(article.publishedAt).format("MMMM D, YYYY")}
+      {new Intl.DateTimeFormat(locale, { dateStyle: "long" }).format(new Date(article.publishedAt))}
     </div>
     <h3><a href={article._url}>{article.title}</a></h3>
     <article>
