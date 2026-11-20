@@ -1,7 +1,9 @@
 ---
 import ArticleExcerpt from "../components/ArticleExcerpt.astro";
+import { createTranslator } from "@app/utils/i18n.js";
 
 const { widget, locale } = Astro.props;
+const __t = createTranslator(locale);
 
 const limit = widget.limit || 5;
 const display = widget.display || "";
@@ -36,7 +38,7 @@ try {
         <ArticleExcerpt article={article} locale={locale} />
       ))
     ) : (
-      <p>No articles available</p>
+      <p>{__t("noArticles")}</p>
     )
   }
 </div>
