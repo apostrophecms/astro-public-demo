@@ -100,7 +100,7 @@ Set the environment variables in your terminal:
 export APOS_EXTERNAL_FRONT_KEY=dev
 ```
 
-> `APOS_ALLOWED_DOMAINS` is not needed for local development — it defaults to `**.apos.dev` for ApostropheCMS hosting. Set it when self-hosting with a custom backend domain (see [Deployment](#deployment)).
+> `APOS_ALLOWED_DOMAINS` is not needed for local development — it defaults to `**.apos.dev` for ApostropheCMS hosting. Set it when serving the site from your own domain (see [Deployment](#deployment)).
 
 Then start both servers:
 
@@ -309,38 +309,20 @@ Deploy the backend and frontend separately:
 | `APOS_EXTERNAL_FRONT_KEY` | Yes | Shared secret between the Astro frontend and ApostropheCMS backend |
 | `APOS_HOST` | Yes | The URL of the ApostropheCMS backend, e.g. `https://cms.example.com`. Defaults to `http://localhost:3000`. |
 | `GITHUB_TOKEN` | No | A GitHub token for the GitHub PRs widget. Without one, GitHub's unauthenticated rate limit applies. |
-| `APOS_ALLOWED_DOMAINS` | Yes | Comma-separated list of backend hostname patterns Astro is allowed to proxy to. Wildcards are supported (e.g. `mysite.apos.dev`, `**.example.com`, or `api.example.com,**.cdn.example.com`). Defaults to `**.apos.dev`. |
+| `APOS_ALLOWED_DOMAINS` | For your own domain | Comma-separated public hostnames the site is served from, matching the backend's `APOS_BASE_URL`. A bare hostname means `https`; for plain HTTP or a non-standard port, give the full origin (e.g. `http://staging.example.com:4321`). Wildcards are supported (e.g. `**.example.com`). Defaults to `**.apos.dev`, which covers ApostropheCMS hosting. |
 
 **Important: Production Security Configuration**
 
-Astro requires an `allowedDomains` entry in `astro.config.mjs` for certain
-ApostropheCMS operations — including file uploads and logout — to work correctly
-in production. Without it, those operations will silently fail with a 403.
-This does **not** affect local development.
+`APOS_ALLOWED_DOMAINS` sets Astro's `security.allowedDomains` option. Astro
+uses it to decide which `Host` and `X-Forwarded-*` headers to trust when it
+builds the request origin for its cross-site check. If your domain isn't
+listed, logout and media uploads can fail with
+`403 Cross-site POST form submissions are forbidden`, and `Astro.url` reports
+`localhost`. This does **not** affect local development.
 
-Add your ApostropheCMS backend domain to the `security` block in
-`frontend/astro.config.mjs`:
-
-```js
-export default defineConfig({
-  // ... other config
-  security: {
-    allowedDomains: [
-      {
-        hostname: 'your-apos-backend.com',
-        protocol: 'https'
-      }
-    ]
-  }
-});
-```
-
-This tells Astro to trust `X-Forwarded-Host` headers from your backend, which
-it uses to construct the request origin for CSRF validation. Setting
-`checkOrigin: false` alone is **not** sufficient.
-
-> Requires `astro@5.14.2` or later. Wildcard hostnames (e.g.
-> `*.yourdomain.com`) are supported if your backend and frontend share a domain.
+Astro reads the variable during `npm run build`, so set it wherever the build
+runs. If a proxy sits in front of Astro, it must forward the `Host` and
+`X-Forwarded-Proto` headers. Do not set `checkOrigin: false` as a workaround.
 
 ## Production-Ready Starter Kit
 

@@ -10,6 +10,8 @@
   "open": "Offen",
   "closed": "Geschlossen",
   "ghPrsForRepo": "{{state}} PRs für {{repo}}",
+  "pagination": "Seitennavigation",
+  "noArticles": "Es gibt noch keine Artikel. Versuchen Sie, einen hinzuzufügen.",
   "prOpenedOn": "Geöffnet am {{date}}",
   "prNumber": "Nummer {{number}}",
   "prsUnavailable": "Pull Requests sind derzeit nicht verfügbar."

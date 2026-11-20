@@ -39,15 +39,15 @@ Resolve data in the component's frontmatter and pass it to the element as a `dat
 
 ```astro
 ---
-// aposFetch is server-side only — never import it into client code.
-import { aposFetch } from '@apostrophecms/apostrophe-astro/helpers/server';
-const response = await aposFetch('/api/v1/...');
+const response = await Astro.locals.aposFetch('/api/v1/...');
 const payload = response.ok ? JSON.stringify(await response.json()) : '';
 ---
 <my-widget data-payload={payload}></my-widget>
 ```
 
-`VideoWidget.astro` / `VideoWidget.ts` is the reference implementation.
+Use `Astro.locals.aposFetch`, not `aposFetch` from `@apostrophecms/apostrophe-astro/helpers/server`. `Astro.locals.aposFetch` is scoped to the current request and sends the visitor's cookies, so a logged-in editor sees what their permissions allow; the helper sends no cookies, so editors get anonymous results. Keep the helper for code with no request, such as `getStaticPaths`.
+
+`ArticleWidget.astro` and `VideoWidget.astro` / `VideoWidget.ts` are the reference implementations.
 
 Never fetch from an Apostrophe API route in client-side code. Besides the freshness problem above, it breaks any [static build](https://apostrophecms.com/docs/tutorials/astro/static-builds-with-apostrophecms-astro.html) outright — the backend is not running at runtime, so the request fails on the deployed site.
 
@@ -154,6 +154,21 @@ const { page } = Astro.props;
 <AposArea area={page.main} />
 ```
 
+## AposField
+
+Renders one `string` or `richText` field, editable in place. The backend field needs
+`wysiwyg: true` (or the module's `wysiwygFields` option for inherited fields like `title`),
+or Astro receives no rendered markup and no editing info. Props are flat; there is no `with`.
+For an area, use `AposArea`.
+
+```astro
+---
+import AposField from '@apostrophecms/apostrophe-astro/components/AposField.astro';
+const { widget } = Astro.props;
+---
+<AposField doc={widget} name="content" class="hero-widget__text" />
+```
+
 ## i18n Key Convention
 
 The starter uses the `project:` namespace by default: `label: 'project:myField'`.
@@ -176,6 +191,7 @@ Template keys must match the page type's backend module name exactly. Widget key
 - `card-title-rt` and `card-content-rt` reuse `RichTextWidget` in the registry intentionally — they are inline rich-text variants.
 - Widget visual variants use the widget's `styles` property in `index.js`, not `select` schema fields for appearance.
 - Frontend is presentation-only — never change backend schemas from the frontend side.
+- A production 403 "Cross-site POST form submissions are forbidden" (logout, uploads) means `APOS_ALLOWED_DOMAINS` was not set at build time. Set it to the site's public hostnames; do not disable `security.checkOrigin` or hard-code `security.allowedDomains` in `astro.config.mjs`.
 
 ## Architecture Guide
 
