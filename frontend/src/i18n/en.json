@@ -10,5 +10,6 @@
   "open": "Open",
   "closed": "Closed",
   "ghPrsForRepo": "{{state}} PRs for {{repo}}",
+  "pagination": "Pagination",
   "noArticles": "There are no articles yet. Try adding one."
 }
